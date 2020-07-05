@@ -1,6 +1,5 @@
 package com.example.candidatetracker.demo;
 
-import com.example.candidatetracker.demo.entity.Role;
 import com.example.candidatetracker.demo.entity.User;
 import org.hibernate.Session;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
 
 @SpringBootApplication
 @RestController
@@ -27,19 +28,21 @@ public class CandidateTrackerApplication {
 
 	@Transactional
 	@GetMapping("/hello")
-	public Role sayHello() {
+	public List<User> sayHello() {
 		Session session = entityManager.unwrap(Session.class);
-		User user = new User("hitanshu98@gmail.com", "asdfghj","Hitanshu", "Shah", "9869710860", true);
-		Role role = session.get(Role.class, "ADMIN");
+		//User user = new User("hitanshu98@gmail.com", "asdfghj","Hitanshu", "Shah", "9869710860");
+		//Role role = session.get(Role.class, "admin");
 		//user.setRole(role);
+		Query query = session.createQuery("from User", User.class);
+		List<User> users = query.getResultList();
 		//user.setManager(null);
 		//session.saveOrUpdate(user);
-		session.close();
 		//role.getUsers().add(user);
+		session.close();
 		//Query<User> query = session.createQuery("from User", User.class);
 		//List<User> userList = query.getResultList();
 		//session.close();
-		return role;
+		return users;
 	}
 
 }

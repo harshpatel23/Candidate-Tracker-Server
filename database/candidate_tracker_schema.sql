@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `candidate_tracker`.`user` (
   `first_name` VARCHAR(45) NULL,
   `last_name` VARCHAR(45) NULL,
   `contact` VARCHAR(10) NULL,
-  `isActive` TINYINT NULL DEFAULT 1,
+  `is_active` TINYINT NULL DEFAULT 1,
   `manager_id` INT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,

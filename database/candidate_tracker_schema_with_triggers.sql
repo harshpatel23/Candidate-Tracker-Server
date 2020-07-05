@@ -34,18 +34,18 @@ CREATE TABLE IF NOT EXISTS `candidate_tracker`.`user` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
-  `role` VARCHAR(20) NOT NULL,
+  `r_id` VARCHAR(20) NOT NULL,
   `first_name` VARCHAR(45) NULL DEFAULT NULL,
   `last_name` VARCHAR(45) NULL DEFAULT NULL,
   `contact` VARCHAR(10) NULL DEFAULT NULL,
-  `isActive` TINYINT NULL DEFAULT '1',
+  `is_active` TINYINT NULL DEFAULT '1',
   `manager_id` INT NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  INDEX `fk_role_idx` (`role` ASC) VISIBLE,
+  INDEX `fk_role_idx` (`r_id` ASC) VISIBLE,
   CONSTRAINT `fk_role`
-    FOREIGN KEY (`role`)
+    FOREIGN KEY (`r_id`)
     REFERENCES `candidate_tracker`.`roles` (`role`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 1

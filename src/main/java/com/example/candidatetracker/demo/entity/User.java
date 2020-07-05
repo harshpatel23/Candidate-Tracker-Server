@@ -20,7 +20,7 @@ public class User {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "role")
+    @JoinColumn(name = "r_id")
     private Role role;
 
     @Column(name = "first_name")
@@ -46,9 +46,6 @@ public class User {
         this.contact = contact;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 
     public void setManager(User manager) {
         this.manager = manager;
@@ -60,17 +57,25 @@ public class User {
     @Column(name = "contact")
     private String contact;
 
-    @Column(name = "isActive")
-    private boolean isActive;
+    @Column(name = "is_active")
+    private int isActive;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private User manager;
 
-    @OneToMany(mappedBy = "manager")
+    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
     private List<User> subordinates = new ArrayList<>();
 
     public User() {
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 
     public int getId() {
@@ -101,10 +106,6 @@ public class User {
         return contact;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
     public User getManager() {
         return manager;
     }
@@ -113,14 +114,13 @@ public class User {
         return subordinates;
     }
 
-    public User(String email, String password, String firstName, String lastName, String contact, boolean isActive) {
+    public User(String email, String password, String firstName, String lastName, String contact) {
         this.email = email;
         this.password = password;
         //this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.contact = contact;
-        this.isActive = isActive;
         //this.manager = manager;
     }
 
