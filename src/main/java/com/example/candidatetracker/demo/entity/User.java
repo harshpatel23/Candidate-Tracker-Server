@@ -1,10 +1,18 @@
 package com.example.candidatetracker.demo.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+                  property = "email")
 @Table(name = "user")
 public class User {
 
@@ -61,10 +69,12 @@ public class User {
     private int isActive;
 
     @ManyToOne
+    // @JsonIgnore
     @JoinColumn(name = "manager_id")
     private User manager;
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> subordinates = new ArrayList<>();
 
     public User() {
