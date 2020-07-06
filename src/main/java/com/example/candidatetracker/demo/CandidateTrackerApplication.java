@@ -44,5 +44,4 @@ public class CandidateTrackerApplication {
 		//session.close();
 		return users;
 	}
-
 }
