@@ -165,7 +165,13 @@ CREATE TABLE IF NOT EXISTS `candidate_tracker`.`user_closure` (
   `parent_id` INT NULL DEFAULT NULL,
   `child_id` INT NULL DEFAULT NULL,
   `depth` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`mapping_id`))
+  PRIMARY KEY (`mapping_id`),
+  CONSTRAINT `fk_parent_id`
+    FOREIGN KEY (`parent_id`)
+    REFERENCES `candidate_tracker`.`user` (`id`),
+  CONSTRAINT `fk_child_id`
+    FOREIGN KEY (`child_id`)
+    REFERENCES `candidate_tracker`.`user` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
