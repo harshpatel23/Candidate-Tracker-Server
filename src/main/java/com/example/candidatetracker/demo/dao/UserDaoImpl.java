@@ -29,19 +29,58 @@ public class UserDaoImpl implements UserDAO {
         
         Session session = entityManager.unwrap(Session.class);
         
-        // Query<User> query = session.createQuery("from User", User.class);
+        Query<User> query = session.createQuery("from User", User.class);
 
-        Query<User> query = session.createQuery("select u from User u where u.id = :user_id", User.class).setParameter("user_id", 1);
-
-        User current_user = query.getSingleResult();
-
-        List<User> users = new ArrayList<>(current_user.getSuccessors());
-
-        users.remove(current_user);
+        List<User> users = query.getResultList();
             
         return users;
     
     }
 
+    @Override
+    @Transactional
+	public User findById(int id) {
+
+        Session session = entityManager.unwrap(Session.class);
+
+        User user = session.get(User.class, id);
+
+        return user;
+	}
+
+    @Override
+    @Transactional
+	public User save(User user) {
+
+        Session session = entityManager.unwrap(Session.class);
+
+        session.saveOrUpdate(user);
+        
+        return user;
+	}
+
+	@Override
+    @Transactional
+    public void deleteById(int id) {
+
+        Session session = entityManager.unwrap(Session.class);
+
+        Query query = session.createQuery("delete from User where id = :id").setParameter("id", id);
+   
+        query.executeUpdate();
+	}
+
+    @Override
+    @Transactional
+	public User findByEmail(String email) {
+        
+        Session session = entityManager.unwrap(Session.class);
+        
+        Query<User> query = session.createQuery("select u from User u where u.email = :email").setParameter("email", email);
+
+        User user = query.getSingleResult();
+
+        return user;
+	}
     
 }

@@ -25,25 +25,4 @@ public class CandidateTrackerApplication {
 	public CandidateTrackerApplication(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-
-	@Transactional
-	@GetMapping("/hello")
-	public List<User> sayHello() {
-		Session session = entityManager.unwrap(Session.class);
-		//User user = new User("hitanshu98@gmail.com", "asdfghj","Hitanshu", "Shah", "9869710860");
-		//Role role = session.get(Role.class, "admin");
-		//user.setRole(role);
-		//User user = session.get(User.class, 2);
-		Query query = session.createQuery("from User", User.class);
-		List<User> users = query.getResultList();
-		//user.setManager(null);
-		//session.saveOrUpdate(user);
-		//role.getUsers().add(user);
-		//List<User> users = user.getSuccessors();
-		session.close();
-		//Query<User> query = session.createQuery("from User", User.class);
-		//List<User> userList = query.getResultList();
-		//session.close();
-		return users;
-	}
 }

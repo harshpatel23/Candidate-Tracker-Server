@@ -17,4 +17,5 @@ select * from candidate_tracker.user;
 select * from candidate_tracker.user_closure;
 
 # retreiving all children of an admin (Harsh -> id = 1)
-select first_name, last_name, email from user inner join user_closure on user.id = user_closure.child_id where user_closure.parent_id = 2;
+use candidate_Tracker;
+select first_name, last_name, email from user inner join user_closure on user.id = user_closure.child_id where user_closure.parent_id = 5;

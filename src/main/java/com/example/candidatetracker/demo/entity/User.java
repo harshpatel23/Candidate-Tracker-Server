@@ -34,6 +34,20 @@ public class User {
     @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "contact")
+    private String contact;
+
+    @Column(name = "is_active")
+    private int isActive;
+
+    @ManyToOne
+    // @JsonIgnore
+    @JoinColumn(name = "manager_id")
+    private User manager;
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -54,24 +68,10 @@ public class User {
         this.contact = contact;
     }
 
-
     public void setManager(User manager) {
         this.manager = manager;
     }
 
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "contact")
-    private String contact;
-
-    @Column(name = "is_active")
-    private int isActive;
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "manager_id")
-    private User manager;
 
     public Set<User> getSuccessors() {
         return successors;
@@ -155,14 +155,15 @@ public class User {
         return subordinates;
     }
 
-    public User(String email, String password, String firstName, String lastName, String contact) {
+    public User(String email, String password, Role role, String firstName, String lastName, String contact, User manager, int isActive) {
         this.email = email;
         this.password = password;
-        //this.role = role;
+        this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.contact = contact;
-        //this.manager = manager;
+        this.manager = manager;
+        this.isActive = isActive;
     }
 
 }

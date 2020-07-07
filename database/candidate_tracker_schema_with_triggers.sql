@@ -46,7 +46,10 @@ CREATE TABLE IF NOT EXISTS `candidate_tracker`.`user` (
   INDEX `fk_role_idx` (`r_id` ASC) VISIBLE,
   CONSTRAINT `fk_role`
     FOREIGN KEY (`r_id`)
-    REFERENCES `candidate_tracker`.`roles` (`role`))
+    REFERENCES `candidate_tracker`.`roles` (`role`),
+    CONSTRAINT `fk_manager_id`
+    FOREIGN KEY (`manager_id`)
+    REFERENCES `candidate_tracker`.`user` (`id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8;
