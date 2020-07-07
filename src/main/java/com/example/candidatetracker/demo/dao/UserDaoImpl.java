@@ -1,5 +1,6 @@
 package com.example.candidatetracker.demo.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,9 +29,13 @@ public class UserDaoImpl implements UserDAO {
         
         Session session = entityManager.unwrap(Session.class);
         
-        Query<User> query = session.createQuery("from User", User.class);
+        // Query<User> query = session.createQuery("from User", User.class);
 
-        List<User> users = query.getResultList();
+        Query<User> query = session.createQuery("select u from User u where u.id = 2");
+        
+        User user = query.getSingleResult();
+
+        List<User> users = new ArrayList<User>(user.getSuccessors());
 
         return users;
     
