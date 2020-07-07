@@ -19,7 +19,7 @@ public class Role {
     private String roleString;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
     public String getRole() {

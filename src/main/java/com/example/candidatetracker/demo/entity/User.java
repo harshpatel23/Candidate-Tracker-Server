@@ -1,17 +1,17 @@
 package com.example.candidatetracker.demo.entity;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
                   property = "email")
 @Table(name = "user")
 public class User {
@@ -69,9 +69,40 @@ public class User {
     private int isActive;
 
     @ManyToOne
-    // @JsonIgnore
+    @JsonIgnore
     @JoinColumn(name = "manager_id")
     private User manager;
+
+    public Set<User> getSuccessors() {
+        return successors;
+    }
+
+    public void setSuccessors(Set<User> successors) {
+        this.successors = successors;
+    }
+
+    @JsonIgnore
+    @ManyToMany(cascade={CascadeType.ALL})
+    @JoinTable(name="user_closure",
+            joinColumns={@JoinColumn(name="parent_id")},
+            inverseJoinColumns={@JoinColumn(name="child_id")})
+    private Set<User> successors = new HashSet<>();
+
+    public Set<User> getManagers() {
+        return managers;
+    }
+
+    public void setManagers(Set<User> managers) {
+        this.managers = managers;
+    }
+
+    @JsonIgnore
+    @ManyToMany(mappedBy="successors")
+    private Set<User> managers = new HashSet<>();
+
+    public void setSubordinates(List<User> subordinates) {
+        this.subordinates = subordinates;
+    }
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
     @JsonIgnore
