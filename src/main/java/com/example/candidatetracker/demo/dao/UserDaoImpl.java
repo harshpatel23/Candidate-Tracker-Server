@@ -31,12 +31,14 @@ public class UserDaoImpl implements UserDAO {
         
         // Query<User> query = session.createQuery("from User", User.class);
 
-        Query<User> query = session.createQuery("select u from User u where u.id = 2");
-        
-        User user = query.getSingleResult();
+        Query<User> query = session.createQuery("select u from User u where u.id = :user_id", User.class).setParameter("user_id", 1);
 
-        List<User> users = new ArrayList<User>(user.getSuccessors());
+        User current_user = query.getSingleResult();
 
+        List<User> users = new ArrayList<>(current_user.getSuccessors());
+
+        users.remove(current_user);
+            
         return users;
     
     }
