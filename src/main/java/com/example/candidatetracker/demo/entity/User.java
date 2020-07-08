@@ -1,8 +1,7 @@
 package com.example.candidatetracker.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,8 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-                  property = "email")
 @Table(name = "user")
 public class User {
 
@@ -44,34 +41,38 @@ public class User {
     private int isActive;
 
     @ManyToOne
-    // @JsonIgnore
     @JoinColumn(name = "manager_id")
+    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     private User manager;
 
-    public void setPassword(String password) {
-        this.password = password;
+    @OneToMany(mappedBy = "recruiter")
+    private Set<Candidate> candidates = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "user_closure",
+            joinColumns = {@JoinColumn(name = "parent_id")},
+            inverseJoinColumns = {@JoinColumn(name = "child_id")})
+    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    private Set<User> successors = new HashSet<>();
+
+    @ManyToMany(mappedBy = "successors")
+    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    private Set<User> managers = new HashSet<>();
+
+    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    private List<User> subordinates = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "interviewers")
+    @JsonIgnore
+    private Set<Skill> skills = new HashSet<>();
+
+    public User() {
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public Set<Skill> getSkills() {
+        return skills;
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public void setManager(User manager) {
-        this.manager = manager;
-    }
-
 
     public Set<User> getSuccessors() {
         return successors;
@@ -81,34 +82,12 @@ public class User {
         this.successors = successors;
     }
 
-    @JsonIgnore
-    @ManyToMany(cascade={CascadeType.ALL})
-    @JoinTable(name="user_closure",
-            joinColumns={@JoinColumn(name="parent_id")},
-            inverseJoinColumns={@JoinColumn(name="child_id")})
-    private Set<User> successors = new HashSet<>();
-
     public Set<User> getManagers() {
         return managers;
     }
 
     public void setManagers(Set<User> managers) {
         this.managers = managers;
-    }
-
-    @JsonIgnore
-    @ManyToMany(mappedBy="successors")
-    private Set<User> managers = new HashSet<>();
-
-    public void setSubordinates(List<User> subordinates) {
-        this.subordinates = subordinates;
-    }
-
-    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<User> subordinates = new ArrayList<>();
-
-    public User() {
     }
 
     public int getIsActive() {
@@ -131,29 +110,54 @@ public class User {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Role getRole() {
         return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
         return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getContact() {
         return contact;
     }
 
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
     public User getManager() {
         return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
     }
 
     public List<User> getSubordinates() {
         return subordinates;
     }
+
 
     public User(String email, String password, Role role, String firstName, String lastName, String contact, User manager, int isActive) {
         this.email = email;
@@ -164,6 +168,10 @@ public class User {
         this.contact = contact;
         this.manager = manager;
         this.isActive = isActive;
+    }
+
+    public void setSubordinates(List<User> subordinates) {
+        this.subordinates = subordinates;
     }
 
 }
