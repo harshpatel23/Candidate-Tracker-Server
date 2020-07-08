@@ -1,5 +1,6 @@
 package com.example.candidatetracker.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -42,6 +43,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    @JsonIgnore
     private User manager;
 
     @OneToMany(mappedBy = "recruiter")
@@ -52,23 +54,29 @@ public class User {
             joinColumns = {@JoinColumn(name = "parent_id")},
             inverseJoinColumns = {@JoinColumn(name = "child_id")})
     @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    @JsonIgnore
     private Set<User> successors = new HashSet<>();
 
     @ManyToMany(mappedBy = "successors")
     @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    @JsonIgnore
     private Set<User> managers = new HashSet<>();
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    @JsonIgnore
     private List<User> subordinates = new ArrayList<>();
 
     @OneToMany(mappedBy = "interviewer")
+    @JsonIgnore
     private Set<Interview> interviews = new HashSet<>();
 
     @OneToMany(mappedBy = "updatedBy")
+    @JsonIgnore
     private List<Interview> interviewFeedbackUpdates = new ArrayList<>();
 
     @ManyToMany(mappedBy = "interviewers")
+    @JsonIgnore
     private Set<Skill> skills = new HashSet<>();
 
     public User() {

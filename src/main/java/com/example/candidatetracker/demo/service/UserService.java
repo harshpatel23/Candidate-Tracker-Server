@@ -1,11 +1,11 @@
-package com.example.candidatetracker.demo.dao;
+package com.example.candidatetracker.demo.service;
 
 import java.util.List;
 
 import com.example.candidatetracker.demo.entity.User;
 
-public interface UserDAO {
-
+public interface UserService {
+    
     public List<User> findAll();
 
     public User findById(int id);
@@ -16,6 +16,6 @@ public interface UserDAO {
 
     public User findByEmail(String email);
 
-    public List<User> findByRole(String role);
+	public List<User> findByRole(String role);
 
 }

@@ -1,9 +1,9 @@
 package com.example.candidatetracker.demo.rest;
 
-import com.example.candidatetracker.demo.dao.UserDAO;
 import com.example.candidatetracker.demo.entity.User;
+import com.example.candidatetracker.demo.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,47 +12,52 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController{
 
-    private UserDAO userDAO;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserDAO userDAO){
-        this.userDAO = userDAO;
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping("")
     public List<User> findAllUsers() {
-        return this.userDAO.findAll();
+        return this.userService.findAll();
     }
 
-    @GetMapping("{id}")
-    public User getUserById(@PathVariable int id){
-        return this.userDAO.findById(id);
+    @GetMapping("{identifier}")             //find by id / email
+    public User getUserById(@PathVariable String identifier){
+        try{
+            int id = Integer.parseInt(identifier);
+            return this.userService.findById(id);
+        }catch(NumberFormatException e){
+            return this.userService.findByEmail(identifier);
+        }
     }
 
-    // @GetMapping("/email/{email}")
-    // public User getUserByEmail(@PathVariable String email){
-    //     return this.userDAO.findByEmail(email);
-    // }
+    @GetMapping("/role/{role}")
+    public List<User> findSuccessorsByRole(@PathVariable String role){
+        return this.userService.findByRole(role);
+    }
 
     @PostMapping("")
     public User saveUser(@RequestBody User user) {
-        return this.userDAO.save(user);
+        return this.userService.save(user);
     }
 
     @PutMapping("")
     public User updateUser(@RequestBody User user) {
-        return this.userDAO.save(user);
+        return this.userService.save(user);
     }
 
     @DeleteMapping("{id}")
     public String deleteUser(@PathVariable int id){
 
-        User user = userDAO.findById(id);
+        User user = userService.findById(id);
         if(user == null){
             return "User does not exist";
         }
 
-        this.userDAO.deleteById(id);
+        this.userService.deleteById(id);
         return "User deleted";
     }
 
