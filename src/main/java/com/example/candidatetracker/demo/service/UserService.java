@@ -18,4 +18,6 @@ public interface UserService {
 
 	public List<User> findByRole(String role);
 
+	public User update(User user);
+
 }

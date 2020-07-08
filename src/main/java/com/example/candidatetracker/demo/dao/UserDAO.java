@@ -18,4 +18,6 @@ public interface UserDAO {
 
     public List<User> findByRole(String role);
 
+	public User update(User user);
+
 }

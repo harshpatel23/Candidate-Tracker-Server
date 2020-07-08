@@ -56,5 +56,10 @@ public class UserServiveImpl implements UserService {
         return this.userDAO.findByRole(role);
     }
 
+    @Override
+    public User update(User user) {
+        return this.userDAO.update(user);        
+    }
+
     
 }

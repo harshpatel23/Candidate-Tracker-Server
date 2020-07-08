@@ -3,13 +3,17 @@ package com.example.candidatetracker.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Entity
+@DynamicUpdate
 @Table(name = "user")
 public class User {
 
@@ -82,15 +86,15 @@ public class User {
     public User() {
     }
 
-    public User(String email, String password, Role role, String firstName, String lastName, String contact, User manager, int isActive) {
+    public User(String email, Role role, String firstName, String lastName, String contact, User manager) {
         this.email = email;
-        this.password = password;
         this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
         this.contact = contact;
         this.manager = manager;
-        this.isActive = isActive;
+        this.isActive = 1;
+        this.password = "Asasasa";
     }
 
     public Set<Candidate> getCandidates() {
@@ -211,6 +215,23 @@ public class User {
 
     public void setSubordinates(List<User> subordinates) {
         this.subordinates = subordinates;
+    }
+
+    public static String generateRandomPassword(){
+        String capitalCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String specialCharacters = "!@#$";
+        String numbers = "1234567890";
+        String combinedChars = capitalCaseLetters + lowerCaseLetters + specialCharacters + numbers;
+        Random random = new Random();
+        String password = "";
+   
+      for(int i = 0; i< 8 ; i++) {
+         password += combinedChars.charAt(random.nextInt(combinedChars.length()));
+      }
+      
+        System.out.println(password);      
+      return password;
     }
 
 }

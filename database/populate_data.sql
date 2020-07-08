@@ -8,10 +8,6 @@ INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`
 INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('ojas@somaiya.edu','Ojas123','recruiter','Ojas','Kapre','8451247511',4);
 INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('tanay@somaiya.edu','Tanay123','interviewer','Tanay','Raul','7141284511',5);
 
-
-
-
-
 select * from candidate_tracker.roles;
 select * from candidate_tracker.user;
 select * from candidate_tracker.user_closure;

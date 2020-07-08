@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.User;
 
@@ -54,16 +55,6 @@ public class UserDaoImpl implements UserDAO {
         return user;
 	}
 
-    @Override
-	public User save(User user) {
-
-        Session session = entityManager.unwrap(Session.class);
-
-        session.saveOrUpdate(user);
-        
-        return user;
-	}
-
 	@Override
     public void deleteById(int id) {
 
@@ -79,7 +70,7 @@ public class UserDaoImpl implements UserDAO {
         
         Session session = entityManager.unwrap(Session.class);
         
-        Query<User> query = session.createQuery("select u from User u where u.email = :email").setParameter("email", email);
+        Query<User> query = session.createQuery("select u from User u where u.email = :email", User.class).setParameter("email", email);
 
         User user; 
         try{
@@ -102,6 +93,25 @@ public class UserDaoImpl implements UserDAO {
         
         return user.getSuccessors().stream().filter(u -> u.getRole().getRole().equals(role)).collect(Collectors.toList());
 
+    }
+    
+    @Override
+	public User save(User user) {
+
+        Session session = entityManager.unwrap(Session.class);
+        user.setPassword(User.generateRandomPassword());
+        user.setIsActive(1);
+        session.save(user);
+        
+        return user;
+	}
+
+    @Override
+    @Transactional
+    public User update(User user) {
+        Session session = entityManager.unwrap(Session.class);
+        session.update(user);
+        return user;
     }
     
 }
