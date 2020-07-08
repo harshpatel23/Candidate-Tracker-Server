@@ -1,6 +1,5 @@
 package com.example.candidatetracker.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -63,15 +62,59 @@ public class User {
     @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     private List<User> subordinates = new ArrayList<>();
 
+    @OneToMany(mappedBy = "interviewer")
+    private Set<Interview> interviews = new HashSet<>();
+
+    @OneToMany(mappedBy = "updatedBy")
+    private List<Interview> interviewFeedbackUpdates = new ArrayList<>();
+
     @ManyToMany(mappedBy = "interviewers")
-    @JsonIgnore
     private Set<Skill> skills = new HashSet<>();
 
     public User() {
     }
 
+    public User(String email, String password, Role role, String firstName, String lastName, String contact, User manager, int isActive) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contact = contact;
+        this.manager = manager;
+        this.isActive = isActive;
+    }
+
+    public Set<Candidate> getCandidates() {
+        return candidates;
+    }
+
+    public void setCandidates(Set<Candidate> candidates) {
+        this.candidates = candidates;
+    }
+
+    public Set<Interview> getInterviews() {
+        return interviews;
+    }
+
+    public void setInterviews(Set<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
+    public List<Interview> getInterviewFeedbackUpdates() {
+        return interviewFeedbackUpdates;
+    }
+
+    public void setInterviewFeedbackUpdates(List<Interview> interviewFeedbackUpdates) {
+        this.interviewFeedbackUpdates = interviewFeedbackUpdates;
+    }
+
     public Set<Skill> getSkills() {
         return skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
     }
 
     public Set<User> getSuccessors() {
@@ -156,18 +199,6 @@ public class User {
 
     public List<User> getSubordinates() {
         return subordinates;
-    }
-
-
-    public User(String email, String password, Role role, String firstName, String lastName, String contact, User manager, int isActive) {
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.contact = contact;
-        this.manager = manager;
-        this.isActive = isActive;
     }
 
     public void setSubordinates(List<User> subordinates) {

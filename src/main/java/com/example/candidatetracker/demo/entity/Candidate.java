@@ -28,34 +28,26 @@ public class Candidate {
 
     @Column(name = "last_name")
     private String lastName;
-
+    @OneToMany(mappedBy = "candidate")
+    private Set<Interview> interviews = new HashSet<>();
     @Column(name = "contact")
     private String contact;
-
     @Column(name = "address")
     private String address;
-
     @Column(name = "preferred_loc")
     private String preferredLoc;
-
     @Column(name = "ectc")
     private int ectc;
-
     @Column(name = "ctct")
     private int ctct;
-
     @Column (name = "source")
     private String source;
-
     @Column(name = "current_round")
     private int currentRound;
-
     @Enumerated(EnumType.STRING)
     private Status status;
-
     @Column(name = "last_updated")
     private Timestamp lastUpdated;
-
     @ManyToMany(mappedBy = "candidates")
     private Set<Skill> skillSet = new HashSet<>();
 
@@ -73,6 +65,22 @@ public class Candidate {
         this.ectc = ectc;
         this.ctct = ctct;
         this.source = source;
+    }
+
+    public Set<Interview> getInterviews() {
+        return interviews;
+    }
+
+    public void setInterviews(Set<Interview> interviews) {
+        this.interviews = interviews;
+    }
+
+    public Set<Skill> getSkillSet() {
+        return skillSet;
+    }
+
+    public void setSkillSet(Set<Skill> skillSet) {
+        this.skillSet = skillSet;
     }
 
     public User getRecruiter() {

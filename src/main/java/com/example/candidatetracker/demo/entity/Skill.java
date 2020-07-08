@@ -19,18 +19,18 @@ public class Skill {
     @Column(name = "skill_name")
     private String skillName;
 
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "interviewer_skills",
             joinColumns = {@JoinColumn(name = "skill_id")},
             inverseJoinColumns = {@JoinColumn(name = "interviewer_id")})
-    @JsonIgnore
     private Set<User> interviewers = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "candidate_skills",
             joinColumns = {@JoinColumn(name = "skill_id")},
             inverseJoinColumns = {@JoinColumn(name = "candidate_id")})
-    @JsonIgnore
     private Set<Candidate> candidates = new HashSet<>();
 
     public Skill() {
@@ -42,6 +42,10 @@ public class Skill {
 
     public Set<Candidate> getCandidates() {
         return candidates;
+    }
+
+    public void setCandidates(Set<Candidate> candidates) {
+        this.candidates = candidates;
     }
 
     public Set<User> getInterviewers() {
