@@ -12,7 +12,7 @@ public interface UserDAO {
 
     public User save(User user);
 
-    public void deleteById(int id);
+    public void disableById(int id);
 
     public User findByEmail(String email);
 

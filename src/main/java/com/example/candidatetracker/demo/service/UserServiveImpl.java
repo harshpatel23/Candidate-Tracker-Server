@@ -40,8 +40,8 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteById(int id) {
-        userDAO.deleteById(id);
+    public void disableById(int id) {
+        userDAO.disableById(id);
     }
 
     @Override

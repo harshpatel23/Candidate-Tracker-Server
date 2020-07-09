@@ -50,14 +50,14 @@ public class UserController{
     }
 
     @DeleteMapping("{id}")
-    public String deleteUser(@PathVariable int id){
+    public String disableUser(@PathVariable int id){
 
         User user = userService.findById(id);
         if(user == null){
             return "User does not exist";
         }
 
-        this.userService.deleteById(id);
+        this.userService.disableById(id);
         return "User deleted";
     }
 

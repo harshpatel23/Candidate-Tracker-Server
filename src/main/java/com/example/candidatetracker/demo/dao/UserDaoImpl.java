@@ -13,16 +13,19 @@ import com.example.candidatetracker.demo.entity.User;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserDaoImpl implements UserDAO {
 
     private EntityManager entityManager;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserDaoImpl(EntityManager entityManager){
+    public UserDaoImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.entityManager = entityManager;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     /* ---------------------------------------------------------
@@ -56,11 +59,11 @@ public class UserDaoImpl implements UserDAO {
 	}
 
 	@Override
-    public void deleteById(int id) {
+    public void disableById(int id) {
 
         Session session = entityManager.unwrap(Session.class);
 
-        Query query = session.createQuery("delete from User where id = :id").setParameter("id", id);
+        Query query = session.createQuery("update User u set u.isActive = 0 where u.id = :id").setParameter("id", id);
    
         query.executeUpdate();
 	}
@@ -99,7 +102,11 @@ public class UserDaoImpl implements UserDAO {
 	public User save(User user) {
 
         Session session = entityManager.unwrap(Session.class);
-        user.setPassword(User.generateRandomPassword());
+
+        String password = User.generateRandomPassword();
+        //Send mail to user about this password
+        String encryptedPassword = bCryptPasswordEncoder.encode(password); 
+        user.setPassword(encryptedPassword);
         user.setIsActive(1);
         session.save(user);
         
@@ -110,7 +117,14 @@ public class UserDaoImpl implements UserDAO {
     @Transactional
     public User update(User user) {
         Session session = entityManager.unwrap(Session.class);
-        session.update(user);
+
+        //Check if password has changed or not...if new password not available then copy existing password.
+        User existing_user = session.find(User.class, user.getId());
+        user.setPassword(existing_user.getPassword());
+        //User can't be disabled through this method, use delete request instead.
+        user.setIsActive(existing_user.getIsActive());
+        session.merge(user);
+
         return user;
     }
     

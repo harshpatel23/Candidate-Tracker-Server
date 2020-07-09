@@ -22,9 +22,10 @@ public class User {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "email")
+    @Column(name = "email", updatable = false)
     private String email;
 
+    // @JsonIgnore
     @Column(name = "password")
     private String password;
 
@@ -47,10 +48,11 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
-    @JsonIgnore
+    // @JsonIgnore
     private User manager;
 
     @OneToMany(mappedBy = "recruiter")
+    @JsonIgnore
     private Set<Candidate> candidates = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.ALL})
@@ -233,5 +235,14 @@ public class User {
         System.out.println(password);      
       return password;
     }
+
+    @Override
+    public String toString() {
+        return "User [contact=" + contact + ", email=" + email + ", firstName=" + firstName + ", id=" + id
+                + ", isActive=" + isActive + ", lastName=" + lastName + ", password=" + password + ", role=" + role
+                + "]";
+    }
+
+    
 
 }
