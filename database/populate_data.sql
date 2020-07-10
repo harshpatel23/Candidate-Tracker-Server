@@ -1,4 +1,4 @@
-INSERT INTO `candidate_tracker`.`roles` (`role`,`role_string`) VALUES ('root','Root'),('admin','Admin'),('ops','OPS'),('recruiter','Recruiter'),('interviewer','Interviewer');
+INSERT INTO `candidate_tracker`.`roles` (`role`,`role_string`,`h_level`) VALUES ('root','Root','1.0'),('admin','Admin','2'),('ops','OPS','3'),('recruiter','Recruiter','4'),('interviewer','Interviewer','5');
 
 INSERT  INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`) VALUES ('wissen@wissen.com','$2y$10$CCzs6K2oepmDJO1SReJaVume1BKX6RtqiX8/KztUmEK.nzqWm0TnG
 ','root','Wissen','Technology','123456789');
