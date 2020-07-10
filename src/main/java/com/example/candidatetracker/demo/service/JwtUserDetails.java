@@ -8,7 +8,7 @@ import com.example.candidatetracker.demo.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class DatabaseUserDetails implements UserDetails {
+public class JwtUserDetails implements UserDetails {
 
     /**
 	 *
@@ -17,7 +17,7 @@ public class DatabaseUserDetails implements UserDetails {
     
     User user;
 
-    public DatabaseUserDetails(User user){
+    public JwtUserDetails(User user){
         this.user = user;
     }
 

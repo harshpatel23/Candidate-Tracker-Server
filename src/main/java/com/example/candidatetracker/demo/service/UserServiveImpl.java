@@ -22,8 +22,8 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> findAllSuccessors(User currentUser) {
-        return userDAO.findAllSuccessors(currentUser);
+    public List<User> findAllSuccessors(User user) {
+        return userDAO.findAllSuccessors(user);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> findByRole(String role, User currentUser) {
-        return this.userDAO.findByRole(role, currentUser);
+    public List<User> findByRole(String role, User user) {
+        return this.userDAO.findByRole(role, user);
     }
 
     @Override

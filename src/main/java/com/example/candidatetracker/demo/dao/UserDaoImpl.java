@@ -9,9 +9,12 @@ import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.User;
+import com.example.candidatetracker.demo.service.JwtUserDetails;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -29,9 +32,9 @@ public class UserDaoImpl implements UserDAO {
 
 
     @Override
-    public List<User> findAllSuccessors(User currentUser) {
+    public List<User> findAllSuccessors(User current_user) {
 
-        int userId = currentUser.getId();
+        int userId = current_user.getId();
         
         Session session = entityManager.unwrap(Session.class);
         
@@ -80,10 +83,10 @@ public class UserDaoImpl implements UserDAO {
 	}
 
     @Override
-    public List<User> findByRole(String role, User currentUser) {
+    public List<User> findByRole(String role, User current_user) {
 
-        int userId = currentUser.getId();
-        
+        int userId = current_user.getId();
+            
         Session session = entityManager.unwrap(Session.class);
         
         Query<User> query = session.createQuery("select u from User u where u.id = :userId", User.class).setParameter("userId",userId);
