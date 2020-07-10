@@ -9,10 +9,12 @@ import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.User;
+import com.example.candidatetracker.demo.service.DatabaseUserDetails;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -28,23 +30,18 @@ public class UserDaoImpl implements UserDAO {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    /* ---------------------------------------------------------
-
-    ToDo : Fetch id from current logged in user instead of hardcoding
-
-    ----------------------------------------------------------*/
-
-    int userId = 2;
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAllSuccessors(User currentUser) {
+
+        int userId = currentUser.getId();
         
         Session session = entityManager.unwrap(Session.class);
         
         Query<User> query = session.createQuery("select u from User u where u.id = :userId", User.class).setParameter("userId",userId);
 
         User user = query.getSingleResult();
-        
+
         return new ArrayList<User>(user.getSuccessors());    
     }
 
@@ -63,7 +60,7 @@ public class UserDaoImpl implements UserDAO {
 
         Session session = entityManager.unwrap(Session.class);
 
-        Query query = session.createQuery("update User u set u.isActive = 0 where u.id = :id").setParameter("id", id);
+        Query<User> query = session.createQuery("update User u set u.isActive = 0 where u.id = :id", User.class).setParameter("id", id);
    
         query.executeUpdate();
 	}
@@ -86,7 +83,9 @@ public class UserDaoImpl implements UserDAO {
 	}
 
     @Override
-    public List<User> findByRole(String role) {
+    public List<User> findByRole(String role, User currentUser) {
+
+        int userId = currentUser.getId();
         
         Session session = entityManager.unwrap(Session.class);
         
@@ -118,9 +117,17 @@ public class UserDaoImpl implements UserDAO {
     public User update(User user) {
         Session session = entityManager.unwrap(Session.class);
 
-        //Check if password has changed or not...if new password not available then copy existing password.
         User existing_user = session.find(User.class, user.getId());
-        user.setPassword(existing_user.getPassword());
+
+        //Check if password has changed or not...if new password not available then copy existing password else encrypt new password.
+        if(user.getPassword() == null){
+            user.setPassword(existing_user.getPassword());
+        }else{
+            String password = user.getPassword();
+            String encodedPassword = bCryptPasswordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+        }
+        
         //User can't be disabled through this method, use delete request instead.
         user.setIsActive(existing_user.getIsActive());
         session.merge(user);

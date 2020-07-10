@@ -6,7 +6,7 @@ import com.example.candidatetracker.demo.entity.User;
 
 public interface UserDAO {
 
-    public List<User> findAll();
+    public List<User> findAllSuccessors(User currentUser);
 
     public User findById(int id);
 
@@ -16,7 +16,7 @@ public interface UserDAO {
 
     public User findByEmail(String email);
 
-    public List<User> findByRole(String role);
+    public List<User> findByRole(String role, User currentUser);
 
 	public User update(User user);
 
