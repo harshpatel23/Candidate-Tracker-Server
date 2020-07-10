@@ -1,4 +1,4 @@
-INSERT INTO `candidate_tracker`.`roles` (`role`,`role_string`) VALUES ('root','Root'),('admin','Admin'),('ops','OPS'),('recruiter','Recruiter'),('interviewer','Interviewer');
+INSERT INTO `candidate_tracker`.`roles` (`role`,`role_string`,`h_level`) VALUES ('root','Root','1.0'),('admin','Admin','2'),('ops','OPS','3'),('recruiter','Recruiter','4'),('interviewer','Interviewer','5');
 
 INSERT  INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`) VALUES ('wissen@wissen.com','$2a$10$WB99cJN1ir.MgOOXgew6.eVrmvcxJnTDQMKRXteMJwoD22c6HeYR6','root','Wissen','Technology','123456789');
 INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('harsh.patel4@somaiya.edu','$2a$10$X7A6XWsoJx5cKNR.mTd/vuwbX3PWw8tKl8FaYqbBRt0l5FUbZvENq','admin','Harsh','Patel','1864513287',1);
