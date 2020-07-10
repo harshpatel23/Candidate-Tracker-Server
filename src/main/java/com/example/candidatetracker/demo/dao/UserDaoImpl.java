@@ -9,12 +9,9 @@ import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.User;
-import com.example.candidatetracker.demo.service.DatabaseUserDetails;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 

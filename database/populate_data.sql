@@ -1,7 +1,7 @@
-INSERT INTO `candidate_tracker`.`roles` (`role`,`role_string`,`h_level`) VALUES ('root','Root','1.0'),('admin','Admin','2'),('ops','OPS','3'),('recruiter','Recruiter','4'),('interviewer','Interviewer','5');
+INSERT INTO `candidate_tracker`.`roles` (`role`,`role_string`,`h_level`) VALUES ('root','Root',1),('admin','Admin',2),('ops','OPS',3),('recruiter','Recruiter',4),('interviewer','Interviewer',4);
 
 INSERT  INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`) VALUES ('wissen@wissen.com','$2a$10$WB99cJN1ir.MgOOXgew6.eVrmvcxJnTDQMKRXteMJwoD22c6HeYR6','root','Wissen','Technology','123456789');
-INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('harsh.patel4@somaiya.edu','$2a$10$X7A6XWsoJx5cKNR.mTd/vuwbX3PWw8tKl8FaYqbBRt0l5FUbZvENq','admin','Harsh','Patel','1864513287',1);
+INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`lastinterviewer_skills_name`,`contact`,`manager_id`) VALUES ('harsh.patel4@somaiya.edu','$2a$10$X7A6XWsoJx5cKNR.mTd/vuwbX3PWw8tKl8FaYqbBRt0l5FUbZvENq','admin','Harsh','Patel','1864513287',1);
 INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('shivani@gmail.com','$2a$10$rh5Tp067kFIf3DTDdNRo/uZqjRbQ.bAao/iJSZlk5mC6k3bf4g7Cy','admin','Shivani','Jaiswal','8745852147',1);
 INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('hitanshu@somaiya.edu','$2a$10$es0OyjA7a/dd3IJu5UgtsOIo0ydRpsffNY5udjQJcWEb.rYT95Pwq','ops','Hitanshu','Shah','8451284511',2);
 INSERT INTO `candidate_tracker`.`user` (`email`,`password`,`r_id`,`first_name`,`last_name`,`contact`,`manager_id`) VALUES ('murtaza@gmail.com','$2a$10$10rXQLRvVPp0a3xbzkXZgOBmKW2HBzzok/JYv78Mmna0jT6d0XyMi','ops','Murtaza','Patrawala','8541484511',2);

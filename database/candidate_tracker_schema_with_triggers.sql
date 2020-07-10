@@ -20,6 +20,7 @@ USE `candidate_tracker` ;
 CREATE TABLE IF NOT EXISTS `candidate_tracker`.`roles` (
   `role` VARCHAR(20) NOT NULL,
   `role_string` VARCHAR(30) NOT NULL,
+  `h_level` FLOAT NOT NULL,
   PRIMARY KEY (`role`),
   UNIQUE INDEX `role_UNIQUE` (`role` ASC) VISIBLE,
   UNIQUE INDEX `role_string_UNIQUE` (`role_string` ASC) VISIBLE)

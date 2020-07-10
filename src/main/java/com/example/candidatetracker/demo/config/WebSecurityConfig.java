@@ -13,8 +13,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 import com.example.candidatetracker.demo.service.DatabaseUserDetailsService;
-import com.example.candidatetracker.demo.service.UserService;
-import com.example.candidatetracker.demo.service.UserServiveImpl;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -22,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-        .authorizeRequests().anyRequest().authenticated().and().formLogin().permitAll().and().logout().permitAll()
+        // .authorizeRequests().anyRequest().authenticated().and().formLogin().permitAll().and().logout().permitAll()
         ;
     }
 
