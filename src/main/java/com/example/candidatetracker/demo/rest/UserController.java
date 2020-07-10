@@ -1,5 +1,6 @@
 package com.example.candidatetracker.demo.rest;
 
+import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.JwtUserDetails;
 import com.example.candidatetracker.demo.service.UserService;
@@ -64,6 +65,18 @@ public class UserController{
     @PutMapping("")
     public User updateUser(@RequestBody User user) {
         return this.userService.update(user);
+    }
+
+    @PutMapping("/password")
+    public String updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
+        Object principal = authentication.getPrincipal();
+
+        User user = null;
+        if(principal instanceof JwtUserDetails){
+            user = ((JwtUserDetails)principal).getUser();
+        }
+
+        return this.userService.updatePassword(passwordData, user);
     }
 
     @DeleteMapping("{id}")

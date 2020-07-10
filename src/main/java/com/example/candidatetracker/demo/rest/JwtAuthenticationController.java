@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.example.candidatetracker.demo.config.JwtTokenUtil;
 import com.example.candidatetracker.demo.entity.JwtRequest;
 import com.example.candidatetracker.demo.entity.JwtResponse;
+import com.example.candidatetracker.demo.service.JwtUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class JwtAuthenticationController {
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtResponse(token, ((JwtUserDetails)userDetails).getUser()));
 	}
 
 	private void authenticate(String username, String password) throws Exception {

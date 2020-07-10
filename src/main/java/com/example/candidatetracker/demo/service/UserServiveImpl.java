@@ -3,6 +3,7 @@ package com.example.candidatetracker.demo.service;
 import java.util.List;
 
 import com.example.candidatetracker.demo.dao.UserDAO;
+import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,15 @@ public class UserServiveImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User update(User user) {
         return this.userDAO.update(user);        
+    }
+
+    @Override
+    @Transactional
+    public String updatePassword(PasswordData passwordData, User user) {
+        return this.userDAO.updatePassword(passwordData, user);
     }
 
     

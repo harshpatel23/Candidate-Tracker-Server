@@ -8,13 +8,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
+import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
-import com.example.candidatetracker.demo.service.JwtUserDetails;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -133,6 +132,23 @@ public class UserDaoImpl implements UserDAO {
         session.merge(user);
 
         return user;
+    }
+
+    @Override
+    public String updatePassword(PasswordData passwordData, User user) {
+
+        Session session = entityManager.unwrap(Session.class);
+
+        User existingUser = session.find(User.class, user.getId());
+
+        String existingPassword = existingUser.getPassword();
+
+        if(bCryptPasswordEncoder.matches(passwordData.getOldPassword(), existingPassword)){
+            existingUser.setPassword(bCryptPasswordEncoder.encode(passwordData.getNewPassword()));
+            session.save(existingUser);
+            return "Password Changed Successfully";
+        }
+        return "Old Password does not match";
     }
     
 }
