@@ -1,9 +1,11 @@
 package com.example.candidatetracker.demo.rest;
 
 import com.example.candidatetracker.demo.entity.User;
+import com.example.candidatetracker.demo.service.DatabaseUserDetails;
 import com.example.candidatetracker.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,10 @@ public class UserController{
     }
 
     @GetMapping("")
-    public List<User> findAllUsers() {
-        return this.userService.findAll();
+    public List<User> findAllSuccessors() {
+        DatabaseUserDetails currentUserDetails = (DatabaseUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = currentUserDetails.getUser();
+        return this.userService.findAllSuccessors(currentUser);
     }
 
     @GetMapping("{identifier}")             //find by id / email
@@ -36,7 +40,9 @@ public class UserController{
 
     @GetMapping("/role/{role}")
     public List<User> findSuccessorsByRole(@PathVariable String role){
-        return this.userService.findByRole(role);
+        DatabaseUserDetails currentUserDetails = (DatabaseUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = currentUserDetails.getUser();
+        return this.userService.findByRole(role, currentUser);
     }
 
     @PostMapping("")
