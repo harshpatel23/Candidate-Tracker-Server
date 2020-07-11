@@ -2,11 +2,14 @@ package com.example.candidatetracker.demo.dao;
 
 import java.util.List;
 
+import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
+
+import org.springframework.http.ResponseEntity;
 
 public interface UserDAO {
 
-    public List<User> findAllSuccessors(User currentUser);
+    public List<User> findAllSuccessors(User user);
 
     public User findById(int id);
 
@@ -16,8 +19,10 @@ public interface UserDAO {
 
     public User findByEmail(String email);
 
-    public List<User> findByRole(String role, User currentUser);
+    public List<User> findByRole(String role, User user);
 
 	public User update(User user);
+
+	public ResponseEntity updatePassword(PasswordData passwordData, User user);
 
 }

@@ -1,11 +1,13 @@
 package com.example.candidatetracker.demo.rest;
 
+import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
-import com.example.candidatetracker.demo.service.DatabaseUserDetails;
+import com.example.candidatetracker.demo.service.JwtUserDetails;
 import com.example.candidatetracker.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +24,19 @@ public class UserController{
     }
 
     @GetMapping("")
-    public List<User> findAllSuccessors() {
-        DatabaseUserDetails currentUserDetails = (DatabaseUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = currentUserDetails.getUser();
-        return this.userService.findAllSuccessors(currentUser);
+    public List<User> findAllSuccessors(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+
+        User user = null;
+        if(principal instanceof JwtUserDetails){
+            user = ((JwtUserDetails)principal).getUser();
+        }
+        return this.userService.findAllSuccessors(user);
     }
 
     @GetMapping("{identifier}")             //find by id / email
     public User getUserById(@PathVariable String identifier){
+
         try{
             int id = Integer.parseInt(identifier);
             return this.userService.findById(id);
@@ -39,10 +46,16 @@ public class UserController{
     }
 
     @GetMapping("/role/{role}")
-    public List<User> findSuccessorsByRole(@PathVariable String role){
-        DatabaseUserDetails currentUserDetails = (DatabaseUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = currentUserDetails.getUser();
-        return this.userService.findByRole(role, currentUser);
+    public List<User> findSuccessorsByRole(@PathVariable String role, Authentication authentication){
+        
+        Object principal = authentication.getPrincipal();
+
+        User user = null;
+        if(principal instanceof JwtUserDetails){
+            user = ((JwtUserDetails)principal).getUser();
+        }
+
+        return this.userService.findByRole(role,user);
     }
 
     @PostMapping("")
@@ -53,6 +66,18 @@ public class UserController{
     @PutMapping("")
     public User updateUser(@RequestBody User user) {
         return this.userService.update(user);
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
+        Object principal = authentication.getPrincipal();
+
+        User user = null;
+        if(principal instanceof JwtUserDetails){
+            user = ((JwtUserDetails)principal).getUser();
+        }
+
+        return this.userService.updatePassword(passwordData, user);
     }
 
     @DeleteMapping("{id}")

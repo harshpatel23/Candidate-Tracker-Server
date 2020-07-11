@@ -3,9 +3,11 @@ package com.example.candidatetracker.demo.service;
 import java.util.List;
 
 import com.example.candidatetracker.demo.dao.UserDAO;
+import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +24,8 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> findAllSuccessors(User currentUser) {
-        return userDAO.findAllSuccessors(currentUser);
+    public List<User> findAllSuccessors(User user) {
+        return userDAO.findAllSuccessors(user);
     }
 
     @Override
@@ -52,13 +54,20 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> findByRole(String role, User currentUser) {
-        return this.userDAO.findByRole(role, currentUser);
+    public List<User> findByRole(String role, User user) {
+        return this.userDAO.findByRole(role, user);
     }
 
     @Override
+    @Transactional
     public User update(User user) {
         return this.userDAO.update(user);        
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity updatePassword(PasswordData passwordData, User user) {
+        return this.userDAO.updatePassword(passwordData, user);
     }
 
     
