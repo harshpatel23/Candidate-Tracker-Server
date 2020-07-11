@@ -8,7 +8,9 @@ import com.example.candidatetracker.demo.entity.JwtResponse;
 import com.example.candidatetracker.demo.service.JwtUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -36,11 +38,15 @@ public class JwtAuthenticationController {
 	private UserDetailsService jwtInMemoryUserDetailsService;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> generateAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
-			throws Exception {
+	public ResponseEntity<?> generateAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception{
 
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
+		try{
+			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		}catch(DisabledException e){
+			return new ResponseEntity(e.getMessage(), HttpStatus.FORBIDDEN);
+		}catch(BadCredentialsException e){
+			return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+		}
 		final UserDetails userDetails = jwtInMemoryUserDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
 
@@ -55,9 +61,9 @@ public class JwtAuthenticationController {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
+			throw new DisabledException("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+			throw new BadCredentialsException("INVALID_CREDENTIALS", e);
 		}
 	}
 }

@@ -7,6 +7,7 @@ import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +66,7 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public String updatePassword(PasswordData passwordData, User user) {
+    public ResponseEntity updatePassword(PasswordData passwordData, User user) {
         return this.userDAO.updatePassword(passwordData, user);
     }
 

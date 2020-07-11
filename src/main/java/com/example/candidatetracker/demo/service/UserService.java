@@ -5,6 +5,8 @@ import java.util.List;
 import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
 
+import org.springframework.http.ResponseEntity;
+
 public interface UserService {
 
     public List<User> findAllSuccessors(User user);
@@ -21,6 +23,6 @@ public interface UserService {
 
 	public User update(User user);
 
-	public String updatePassword(PasswordData passwordData, User user);
+	public ResponseEntity updatePassword(PasswordData passwordData, User user);
 
 }

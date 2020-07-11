@@ -5,16 +5,17 @@ import java.util.Collection;
 import com.example.candidatetracker.demo.entity.Role;
 import com.example.candidatetracker.demo.entity.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class JwtUserDetails implements UserDetails {
 
     /**
-	 *
-	 */
+     *
+     */
     private static final long serialVersionUID = 1L;
-    
+
     User user;
 
     public JwtUserDetails(User user){
@@ -69,8 +70,7 @@ public class JwtUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        return true;
+        return this.user.getIsActive() == 1 ? true : false;
     }
     
 }

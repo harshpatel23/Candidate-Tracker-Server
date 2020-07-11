@@ -10,10 +10,13 @@ import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
+import com.mysql.fabric.Response;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -135,7 +138,7 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-    public String updatePassword(PasswordData passwordData, User user) {
+    public ResponseEntity updatePassword(PasswordData passwordData, User user) {
 
         Session session = entityManager.unwrap(Session.class);
 
@@ -146,9 +149,9 @@ public class UserDaoImpl implements UserDAO {
         if(bCryptPasswordEncoder.matches(passwordData.getOldPassword(), existingPassword)){
             existingUser.setPassword(bCryptPasswordEncoder.encode(passwordData.getNewPassword()));
             session.save(existingUser);
-            return "Password Changed Successfully";
+            return new ResponseEntity("Password Changed Successfully", HttpStatus.OK);
         }
-        return "Old Password does not match";
+        return new ResponseEntity("Old Password incorrect", HttpStatus.BAD_REQUEST);
     }
     
 }

@@ -6,6 +6,7 @@ import com.example.candidatetracker.demo.service.JwtUserDetails;
 import com.example.candidatetracker.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +69,7 @@ public class UserController{
     }
 
     @PutMapping("/password")
-    public String updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
+    public ResponseEntity updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
         Object principal = authentication.getPrincipal();
 
         User user = null;
