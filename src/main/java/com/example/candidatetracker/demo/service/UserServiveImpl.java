@@ -30,43 +30,37 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public User findById(int id) {
+    public ResponseEntity<User> findById(int id) {
         return userDAO.findById(id);
     }
 
     @Override
     @Transactional
-    public User save(User user) {
+    public ResponseEntity<User> save(User user) {
         return userDAO.save(user);
     }
 
     @Override
     @Transactional
-    public void disableById(int id) {
-        userDAO.disableById(id);
-    }
-
-    @Override
-    @Transactional
-    public User findByEmail(String email) {
+    public ResponseEntity<User> findByEmail(String email) {
         return userDAO.findByEmail(email);
     }
 
     @Override
     @Transactional
-    public List<User> findByRole(String role, User user) {
+    public ResponseEntity<List<User>> findByRole(String role, User user) {
         return this.userDAO.findByRole(role, user);
     }
 
     @Override
     @Transactional
-    public User update(User user) {
+    public ResponseEntity<User> update(User user) {
         return this.userDAO.update(user);        
     }
 
     @Override
     @Transactional
-    public ResponseEntity updatePassword(PasswordData passwordData, User user) {
+    public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) {
         return this.userDAO.updatePassword(passwordData, user);
     }
 

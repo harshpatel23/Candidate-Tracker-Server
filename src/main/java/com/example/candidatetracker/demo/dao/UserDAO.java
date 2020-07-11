@@ -11,18 +11,16 @@ public interface UserDAO {
 
     public List<User> findAllSuccessors(User user);
 
-    public User findById(int id);
+    public ResponseEntity<User> findById(int id);
 
-    public User save(User user);
+    public ResponseEntity<User> save(User user);
 
-    public void disableById(int id);
+    public ResponseEntity<User> findByEmail(String email);
 
-    public User findByEmail(String email);
+    public ResponseEntity<List<User>> findByRole(String role, User user);
 
-    public List<User> findByRole(String role, User user);
+	public ResponseEntity<User> update(User user);
 
-	public User update(User user);
-
-	public ResponseEntity updatePassword(PasswordData passwordData, User user);
+	public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user);
 
 }
