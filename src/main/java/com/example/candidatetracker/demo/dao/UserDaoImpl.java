@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
-import com.mysql.fabric.Response;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -48,27 +47,17 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-	public User findById(int id) {
+	public ResponseEntity<User> findById(int id) {
 
         Session session = entityManager.unwrap(Session.class);
 
         User user = session.get(User.class, id);
 
-        return user;
-	}
-
-	@Override
-    public void disableById(int id) {
-
-        Session session = entityManager.unwrap(Session.class);
-
-        Query<User> query = session.createQuery("update User u set u.isActive = 0 where u.id = :id", User.class).setParameter("id", id);
-   
-        query.executeUpdate();
+        return user != null ? new ResponseEntity<>(user, HttpStatus.OK) : new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
 	}
 
     @Override
-	public User findByEmail(String email) {
+	public ResponseEntity<User> findByEmail(String email) {
         
         Session session = entityManager.unwrap(Session.class);
         
@@ -81,11 +70,12 @@ public class UserDaoImpl implements UserDAO {
             user = null;
         }
 
-        return user;
+        return user != null ? new ResponseEntity<>(user, HttpStatus.OK) : new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+
 	}
 
     @Override
-    public List<User> findByRole(String role, User current_user) {
+    public ResponseEntity<List<User>> findByRole(String role, User current_user) {
 
         int userId = current_user.getId();
             
@@ -95,14 +85,22 @@ public class UserDaoImpl implements UserDAO {
 
         User user = query.getSingleResult();
         
-        return user.getSuccessors().stream().filter(u -> u.getRole().getRole().equals(role)).collect(Collectors.toList());
+        List<User> userList = user.getSuccessors().stream().filter(u -> u.getRole().getRole().equals(role)).collect(Collectors.toList());
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
 
     }
     
     @Override
-	public User save(User user) {
+	public ResponseEntity<User> save(User user) {
 
         Session session = entityManager.unwrap(Session.class);
+
+        //check if user email already exists
+        User userWithSameEmail = findByEmail(user.getEmail()).getBody();
+        if(userWithSameEmail != null){
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        }
 
         String password = User.generateRandomPassword();
         //Send mail to user about this password
@@ -111,34 +109,29 @@ public class UserDaoImpl implements UserDAO {
         user.setIsActive(1);
         session.save(user);
         
-        return user;
+        return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
     @Override
     @Transactional
-    public User update(User user) {
+    public ResponseEntity<User> update(User user) {
         Session session = entityManager.unwrap(Session.class);
 
         User existing_user = session.find(User.class, user.getId());
 
-        //Check if password has changed or not...if new password not available then copy existing password else encrypt new password.
-        if(user.getPassword() == null){
-            user.setPassword(existing_user.getPassword());
-        }else{
-            String password = user.getPassword();
-            String encodedPassword = bCryptPasswordEncoder.encode(password);
-            user.setPassword(encodedPassword);
+        if(existing_user == null){
+            return new ResponseEntity<>(existing_user, HttpStatus.NOT_FOUND);
         }
-        
-        //User can't be disabled through this method, use delete request instead.
-        user.setIsActive(existing_user.getIsActive());
-        session.merge(user);
 
-        return user;
+        //User cannot change password through this endpoint...hence copy original password from database.
+        user.setPassword(existing_user.getPassword());
+
+        User updated_user = (User)session.merge(user);
+        return new ResponseEntity<>(updated_user,HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity updatePassword(PasswordData passwordData, User user) {
+    public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) {
 
         Session session = entityManager.unwrap(Session.class);
 
@@ -146,12 +139,13 @@ public class UserDaoImpl implements UserDAO {
 
         String existingPassword = existingUser.getPassword();
 
+
         if(bCryptPasswordEncoder.matches(passwordData.getOldPassword(), existingPassword)){
             existingUser.setPassword(bCryptPasswordEncoder.encode(passwordData.getNewPassword()));
             session.save(existingUser);
-            return new ResponseEntity("Password Changed Successfully", HttpStatus.OK);
+            return new ResponseEntity<>("Password Changed Successfully", HttpStatus.OK);
         }
-        return new ResponseEntity("Old Password incorrect", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Old Password incorrect", HttpStatus.BAD_REQUEST);
     }
     
 }

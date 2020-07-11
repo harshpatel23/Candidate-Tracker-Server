@@ -35,8 +35,7 @@ public class UserController{
     }
 
     @GetMapping("{identifier}")             //find by id / email
-    public User getUserById(@PathVariable String identifier){
-
+    public ResponseEntity<User> getUserById(@PathVariable String identifier){
         try{
             int id = Integer.parseInt(identifier);
             return this.userService.findById(id);
@@ -46,7 +45,7 @@ public class UserController{
     }
 
     @GetMapping("/role/{role}")
-    public List<User> findSuccessorsByRole(@PathVariable String role, Authentication authentication){
+    public ResponseEntity<List<User>> findSuccessorsByRole(@PathVariable String role, Authentication authentication){
         
         Object principal = authentication.getPrincipal();
 
@@ -59,17 +58,17 @@ public class UserController{
     }
 
     @PostMapping("")
-    public User saveUser(@RequestBody User user) {
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
         return this.userService.save(user);
     }
 
     @PutMapping("")
-    public User updateUser(@RequestBody User user) {
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
         return this.userService.update(user);
     }
 
     @PutMapping("/password")
-    public ResponseEntity updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
+    public ResponseEntity<Object> updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
         Object principal = authentication.getPrincipal();
 
         User user = null;
@@ -79,17 +78,4 @@ public class UserController{
 
         return this.userService.updatePassword(passwordData, user);
     }
-
-    @DeleteMapping("{id}")
-    public String disableUser(@PathVariable int id){
-
-        User user = userService.findById(id);
-        if(user == null){
-            return "User does not exist";
-        }
-
-        this.userService.disableById(id);
-        return "User deleted";
-    }
-
 }
