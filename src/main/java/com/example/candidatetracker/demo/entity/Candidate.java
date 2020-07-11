@@ -20,7 +20,7 @@ public class Candidate {
 
     @ManyToOne
     @JoinColumn(name = "recruiter_id")
-    @JsonIgnore
+    // @JsonIgnore
     private User recruiter;
 
     @Column(name = "first_name")

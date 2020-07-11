@@ -36,13 +36,11 @@ public class UserDaoImpl implements UserDAO {
     public List<User> findAllSuccessors(User current_user) {
 
         int userId = current_user.getId();
-        
         Session session = entityManager.unwrap(Session.class);
         
         Query<User> query = session.createQuery("select u from User u where u.id = :userId", User.class).setParameter("userId",userId);
 
         User user = query.getSingleResult();
-
         return new ArrayList<User>(user.getSuccessors());    
     }
 
@@ -124,10 +122,18 @@ public class UserDaoImpl implements UserDAO {
         }
 
         //User cannot change password through this endpoint...hence copy original password from database.
-        user.setPassword(existing_user.getPassword());
+        // user.setPassword(existing_user.getPassword());
 
-        User updated_user = (User)session.merge(user);
-        return new ResponseEntity<>(updated_user,HttpStatus.OK);
+        // User updated_user = (User)session.merge(user);
+
+        existing_user.setFirstName(user.getFirstName());
+        existing_user.setLastName(user.getLastName());
+        existing_user.setContact(user.getContact());
+        existing_user.setIsActive(user.getId());
+        
+        session.close();
+
+        return new ResponseEntity<>(existing_user,HttpStatus.OK);
     }
 
     @Override
