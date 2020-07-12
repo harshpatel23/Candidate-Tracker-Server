@@ -1,9 +1,10 @@
 package com.example.candidatetracker.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,6 @@ public class Candidate {
 
     @ManyToOne
     @JoinColumn(name = "recruiter_id")
-    @JsonIgnore
     private User recruiter;
 
     @Column(name = "first_name")
@@ -44,12 +44,15 @@ public class Candidate {
     @Column(name = "source")
     private String source;
     @Column(name = "current_round")
-    private int currentRound;
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private Integer currentRound;
+
+    @Column(name = "status")
+    private String status;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "last_updated")
-    private Timestamp lastUpdated;
-    @JsonIgnore
+    private Date lastUpdated;
     @ManyToMany(mappedBy = "candidates")
     private Set<Skill> skillSet = new HashSet<>();
 
@@ -169,27 +172,25 @@ public class Candidate {
         this.source = source;
     }
 
-    public int getCurrentRound() {
+    public Integer getCurrentRound() {
         return currentRound;
     }
 
-    public void setCurrentRound(int currentRound) {
+    public void setCurrentRound(Integer currentRound) {
         this.currentRound = currentRound;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Timestamp getLastUpdated() {
+    public Date getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Timestamp lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
+
 }

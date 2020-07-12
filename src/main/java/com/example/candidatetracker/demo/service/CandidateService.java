@@ -12,4 +12,8 @@ public interface CandidateService {
     public Candidate save(Candidate candidate);
 
     public Candidate update(Candidate candidate);
+
+    public Candidate getCandidateById(int id);
+
+    public Candidate getCandidateByEmail(String email);
 }

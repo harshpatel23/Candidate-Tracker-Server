@@ -1,9 +1,11 @@
 package com.example.candidatetracker.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
+
 
 @Entity
 @Table(name = "interview")
@@ -23,11 +25,15 @@ public class Interview {
     @JoinColumn(name = "interviewer_id")
     private User interviewer;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private Date startTime;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "end_time")
-    private Timestamp endTime;
+    private Date endTime;
 
     @Column(name = "feedback")
     private String feedback;
@@ -44,7 +50,7 @@ public class Interview {
     public Interview() {
     }
 
-    public Interview(Timestamp startTime, Timestamp endTime, String feedback, int roundNum) {
+    public Interview(Date startTime, Date endTime, String feedback, int roundNum) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.feedback = feedback;
@@ -67,19 +73,19 @@ public class Interview {
         this.interviewer = interviewer;
     }
 
-    public Timestamp getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Timestamp getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Timestamp endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

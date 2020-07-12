@@ -13,4 +13,7 @@ public interface CandidateDAO {
 
     public Candidate update(Candidate candidate);
 
+    public Candidate getCandidateById(int Id);
+
+    public Candidate getCandidateByEmail(String email);
 }

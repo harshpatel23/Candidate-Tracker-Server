@@ -44,6 +44,15 @@ public class CandidateController {
         return candidate;
     }
 
-
+    // maps to id if String can be parsed to integer else considers it as email
+    @GetMapping("{identifier}")
+    public Candidate getUserById(@PathVariable String identifier) {
+        try {
+            int id = Integer.parseInt(identifier);
+            return this.candidateService.getCandidateById(id);
+        } catch (NumberFormatException e) {
+            return this.candidateService.getCandidateByEmail(identifier);
+        }
+    }
 }
 
