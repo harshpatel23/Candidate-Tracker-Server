@@ -2,9 +2,10 @@ package com.example.candidatetracker.demo.service;
 
 import com.example.candidatetracker.demo.dao.CandidateDAO;
 import com.example.candidatetracker.demo.entity.Candidate;
+import com.example.candidatetracker.demo.entity.User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class CandidateServiceImpl implements CandidateService {
@@ -16,8 +17,8 @@ public class CandidateServiceImpl implements CandidateService {
     private CandidateDAO candidateDAO;
 
     @Override
-    public List<Candidate> getAll() {
-        return candidateDAO.getAll();
+    public Set<Candidate> getAll(User currentUser) {
+        return candidateDAO.getAll(currentUser);
     }
 
     @Override

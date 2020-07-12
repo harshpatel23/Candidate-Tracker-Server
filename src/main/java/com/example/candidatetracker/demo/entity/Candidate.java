@@ -20,7 +20,7 @@ public class Candidate {
 
     @ManyToOne
     @JoinColumn(name = "recruiter_id")
-    // @JsonIgnore
+    @JsonIgnore
     private User recruiter;
 
     @Column(name = "first_name")
@@ -29,6 +29,7 @@ public class Candidate {
     @Column(name = "last_name")
     private String lastName;
     @OneToMany(mappedBy = "candidate")
+    @JsonIgnore
     private Set<Interview> interviews = new HashSet<>();
     @Column(name = "contact")
     private String contact;
@@ -40,7 +41,7 @@ public class Candidate {
     private int ectc;
     @Column(name = "ctct")
     private int ctct;
-    @Column (name = "source")
+    @Column(name = "source")
     private String source;
     @Column(name = "current_round")
     private int currentRound;
@@ -48,6 +49,7 @@ public class Candidate {
     private Status status;
     @Column(name = "last_updated")
     private Timestamp lastUpdated;
+    @JsonIgnore
     @ManyToMany(mappedBy = "candidates")
     private Set<Skill> skillSet = new HashSet<>();
 

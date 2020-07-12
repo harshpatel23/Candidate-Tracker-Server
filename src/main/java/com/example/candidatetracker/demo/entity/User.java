@@ -1,16 +1,10 @@
 package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @DynamicUpdate
@@ -25,12 +19,13 @@ public class User {
     @Column(name = "email", updatable = false)
     private String email;
 
-    // @JsonIgnore
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "r_id")
+    @JsonIgnore
     private Role role;
 
     @Column(name = "first_name")
@@ -47,8 +42,8 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
-    // @JsonIgnore
+    //@JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    @JsonIgnore
     private User manager;
 
     @OneToMany(mappedBy = "recruiter")
@@ -59,17 +54,17 @@ public class User {
     @JoinTable(name = "user_closure",
             joinColumns = {@JoinColumn(name = "parent_id")},
             inverseJoinColumns = {@JoinColumn(name = "child_id")})
-    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    //@JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     @JsonIgnore
     private Set<User> successors = new HashSet<>();
 
     @ManyToMany(mappedBy = "successors")
-    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    //@JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     @JsonIgnore
     private Set<User> managers = new HashSet<>();
 
     @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    //@JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     @JsonIgnore
     private List<User> subordinates = new ArrayList<>();
 
@@ -219,7 +214,7 @@ public class User {
         this.subordinates = subordinates;
     }
 
-    public static String generateRandomPassword(){
+    public static String generateRandomPassword() {
         String capitalCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         String specialCharacters = "!@#$";
@@ -227,13 +222,13 @@ public class User {
         String combinedChars = capitalCaseLetters + lowerCaseLetters + specialCharacters + numbers;
         Random random = new Random();
         String password = "";
-   
-      for(int i = 0; i< 8 ; i++) {
-         password += combinedChars.charAt(random.nextInt(combinedChars.length()));
-      }
-      
-        System.out.println(password);      
-      return password;
+
+        for (int i = 0; i < 8; i++) {
+            password += combinedChars.charAt(random.nextInt(combinedChars.length()));
+        }
+
+        System.out.println(password);
+        return password;
     }
 
     @Override
@@ -243,6 +238,5 @@ public class User {
                 + "]";
     }
 
-    
 
 }

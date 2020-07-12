@@ -1,31 +1,34 @@
 package com.example.candidatetracker.demo.dao;
 
 import com.example.candidatetracker.demo.entity.Candidate;
+import com.example.candidatetracker.demo.entity.User;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public class CandidateDAOImpl implements CandidateDAO {
 
     @Autowired
-    public CandidateDAOImpl(EntityManager entityManager) {
+    public CandidateDAOImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.entityManager = entityManager;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     private EntityManager entityManager;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
-    public List<Candidate> getAll() {
+    public Set<Candidate> getAll(User currentUser) {
+        int userId = currentUser.getId();
         Session session = entityManager.unwrap(Session.class);
-        Query query = session.createQuery("from Candidate");
-        List<Candidate> candidateList = query.getResultList();
-        return candidateList;
+        User user = session.get(User.class, userId);
+        return user.getCandidates();
     }
 
     @Override

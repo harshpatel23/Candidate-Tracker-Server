@@ -1,12 +1,13 @@
 package com.example.candidatetracker.demo.service;
 
 import com.example.candidatetracker.demo.entity.Candidate;
+import com.example.candidatetracker.demo.entity.User;
 
-import java.util.List;
+import java.util.Set;
 
 public interface CandidateService {
 
-    public List<Candidate> getAll();
+    public Set<Candidate> getAll(User currentUser);
 
     public Candidate save(Candidate candidate);
 
