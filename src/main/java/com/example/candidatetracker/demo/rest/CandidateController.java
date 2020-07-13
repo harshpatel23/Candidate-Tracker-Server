@@ -54,5 +54,16 @@ public class CandidateController {
             return this.candidateService.getCandidateByEmail(identifier);
         }
     }
+
+    @PutMapping("/hire/{id}")
+    public Candidate hireCandidate(@PathVariable Integer id) {
+        return candidateService.changeCandidateStatus(id, "hired");
+    }
+
+    @PutMapping("/reject/{id}")
+    public Candidate rejectCandidate(@PathVariable Integer id) {
+        return candidateService.changeCandidateStatus(id, "rejected");
+    }
+
 }
 

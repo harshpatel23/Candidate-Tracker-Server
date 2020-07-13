@@ -41,4 +41,9 @@ public class CandidateServiceImpl implements CandidateService {
         return candidateDAO.getCandidateByEmail(email);
     }
 
+    @Override
+    public Candidate changeCandidateStatus(Integer id, String status) {
+        return candidateDAO.changeCandidateStatus(id, status);
+    }
+
 }

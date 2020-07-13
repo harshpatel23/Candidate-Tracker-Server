@@ -16,4 +16,6 @@ public interface CandidateDAO {
     public Candidate getCandidateById(int Id);
 
     public Candidate getCandidateByEmail(String email);
+
+    public Candidate changeCandidateStatus(Integer id, String status);
 }

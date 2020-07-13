@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `candidate_tracker`.`candidate` (
   `source` VARCHAR(45) NULL DEFAULT NULL,
   `cv` MEDIUMBLOB NULL DEFAULT NULL,
   `current_round` INT NULL DEFAULT NULL,
-  `status` ENUM('ready', 'hold', 'hired', 'rejected') NULL DEFAULT NULL,
+  `status` ENUM('ready', 'hold', 'hired', 'rejected') NULL DEFAULT 'ready',
   `last_updated` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,

@@ -16,4 +16,6 @@ public interface CandidateService {
     public Candidate getCandidateById(int id);
 
     public Candidate getCandidateByEmail(String email);
+
+    public Candidate changeCandidateStatus(Integer id, String status);
 }

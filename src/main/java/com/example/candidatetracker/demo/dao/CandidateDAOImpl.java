@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.Date;
 import java.util.Set;
 
 @Repository
@@ -67,5 +68,14 @@ public class CandidateDAOImpl implements CandidateDAO {
         return candidate;
     }
 
+    @Override
+    public Candidate changeCandidateStatus(Integer id, String status) {
+        Session session = entityManager.unwrap(Session.class);
+        Candidate toBeModified = session.find(Candidate.class, id);
+        toBeModified.setStatus(status);
+        toBeModified.setLastUpdated(new Date());
+        session.saveOrUpdate(toBeModified);
+        return toBeModified;
+    }
 
 }

@@ -23,6 +23,15 @@ VALUES ('candidate5@gamil.com',4,'Jugal','Bharmani','7786381542','Andheri','Mumb
 
 INSERT INTO `candidate_tracker`.`candidate_skills` (`candidate_id`, `skill_id`) VALUES (1, 1), (1, 2), (1, 3), (1, 4);
 
+INSERT INTO `candidate_tracker`.`interview` (`candidate_id`, `interviewer_id`, `start_time`, `end_time`, `feedback`, `updated_by`, `round_no`) 
+VALUES (1, 7, '2020-07-15 10:30:00', '2020-07-15 12:30:00', 'Good', 7, 1);
+
+INSERT INTO `candidate_tracker`.`interview` (`candidate_id`, `interviewer_id`, `start_time`, `end_time`, `feedback`, `updated_by`, `round_no`) 
+VALUES (1, 7, '2020-08-15 14:30:00', '2020-08-15 16:30:00', 'Amazing', 7, 1);
+
+INSERT INTO `candidate_tracker`.`interview` (`candidate_id`, `interviewer_id`, `start_time`, `end_time`, `feedback`, `updated_by`, `round_no`) 
+VALUES (1, 7, '2020-10-15 16:00:00', '2020-07-15 18:00:00', 'Great', 7, 1);
+
 select * from candidate_tracker.roles;
 select * from candidate_tracker.user;
 select * from candidate_tracker.user_closure;
