@@ -126,6 +126,7 @@ CREATE TABLE IF NOT EXISTS `candidate_tracker`.`interview` (
   `feedback` TEXT NULL DEFAULT NULL,
   `updated_by` INT NULL DEFAULT NULL,
   `round_no` INT NULL DEFAULT NULL,
+  `approval_status` ENUM('recruiter_approved', 'interviewer_approved', 'both_approved') NOT NULL DEFAULT 'recruiter_approved',
   PRIMARY KEY (`interview_id`),
   INDEX `fk_interviewer_id_idx` (`interviewer_id` ASC) VISIBLE,
   INDEX `fk_candidate_id_idx` (`candidate_id` ASC) VISIBLE,

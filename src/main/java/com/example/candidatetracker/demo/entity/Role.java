@@ -14,10 +14,13 @@ public class Role {
     @Id
     @Column(name = "role")
     private String role;
+
     @Column(name = "H_level")
     private float heirarchyLevel;
+
     @Column(name = "role_string")
     private String roleString;
+
     @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<User> users = new ArrayList<>();
@@ -28,7 +31,8 @@ public class Role {
         this.heirarchyLevel = heirarchyLevel;
     }
 
-    public Role(){}
+    public Role() {
+    }
 
     public float getHeirarchyLevel() {
         return heirarchyLevel;

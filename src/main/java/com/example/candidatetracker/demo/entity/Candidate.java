@@ -27,20 +27,28 @@ public class Candidate {
 
     @Column(name = "last_name")
     private String lastName;
+
     @OneToMany(mappedBy = "candidate")
     private Set<Interview> interviews = new HashSet<>();
+
     @Column(name = "contact")
     private String contact;
+
     @Column(name = "address")
     private String address;
+
     @Column(name = "preferred_loc")
     private String preferredLoc;
+
     @Column(name = "ectc")
     private int ectc;
+
     @Column(name = "ctct")
     private int ctct;
+
     @Column(name = "source")
     private String source;
+
     @Column(name = "current_round")
     private Integer currentRound;
 
@@ -51,6 +59,7 @@ public class Candidate {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "last_updated")
     private Date lastUpdated;
+
     @ManyToMany(mappedBy = "candidates")
     private Set<Skill> skillSet = new HashSet<>();
 

@@ -1,7 +1,7 @@
 package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,12 +16,11 @@ public class Interview {
     private int interviewId;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties({"interviews", "skillSet"})
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "interviewer_id")
     private User interviewer;
 
@@ -43,8 +42,6 @@ public class Interview {
 
     @ManyToOne
     @JoinColumn(name = "updated_by")
-    @JsonIgnore
-    //@JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     private User updatedBy;
 
     public Interview() {

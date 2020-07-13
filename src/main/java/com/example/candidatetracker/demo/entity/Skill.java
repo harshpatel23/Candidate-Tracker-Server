@@ -15,14 +15,17 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_id")
     private int skillId;
+
     @Column(name = "skill_name")
     private String skillName;
+
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "interviewer_skills",
             joinColumns = {@JoinColumn(name = "skill_id")},
             inverseJoinColumns = {@JoinColumn(name = "interviewer_id")})
     private Set<User> interviewers = new HashSet<>();
+    
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "candidate_skills",
