@@ -20,6 +20,7 @@ public class Interview {
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
+    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
     @ManyToOne
     @JoinColumn(name = "interviewer_id")
     private User interviewer;

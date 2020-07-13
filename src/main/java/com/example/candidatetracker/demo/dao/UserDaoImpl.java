@@ -129,7 +129,7 @@ public class UserDaoImpl implements UserDAO {
         existing_user.setFirstName(user.getFirstName());
         existing_user.setLastName(user.getLastName());
         existing_user.setContact(user.getContact());
-        existing_user.setIsActive(user.getId());
+        existing_user.setIsActive(user.getIsActive());
         
         session.close();
 
