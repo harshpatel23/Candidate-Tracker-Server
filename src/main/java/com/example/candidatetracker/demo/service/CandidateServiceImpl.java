@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CandidateServiceImpl implements CandidateService {
 
@@ -17,31 +19,37 @@ public class CandidateServiceImpl implements CandidateService {
     private CandidateDAO candidateDAO;
 
     @Override
+    @Transactional
     public Set<Candidate> getAll(User currentUser) {
         return candidateDAO.getAll(currentUser);
     }
 
     @Override
+    @Transactional
     public Candidate save(Candidate candidate) {
         return candidateDAO.save(candidate);
     }
 
     @Override
+    @Transactional
     public Candidate update(Candidate candidate) {
         return candidateDAO.update(candidate);
     }
 
     @Override
+    @Transactional
     public Candidate getCandidateById(int id) {
         return candidateDAO.getCandidateById(id);
     }
 
     @Override
+    @Transactional
     public Candidate getCandidateByEmail(String email) {
         return candidateDAO.getCandidateByEmail(email);
     }
 
     @Override
+    @Transactional
     public Candidate changeCandidateStatus(Integer id, String status) {
         return candidateDAO.changeCandidateStatus(id, status);
     }

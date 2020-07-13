@@ -34,7 +34,7 @@ VALUES (1, 7, '2020-10-15 16:00:00', '2020-07-15 18:00:00', 'Great', 7, 1);
 
 select * from candidate_tracker.roles;
 select * from candidate_tracker.user;
-select * from candidate_tracker.user_closure;
+select * from candidate_tracker.interviewuser_closure;
 
 # retreiving all children of an admin (Harsh -> id = 1)
 use candidate_Tracker;
