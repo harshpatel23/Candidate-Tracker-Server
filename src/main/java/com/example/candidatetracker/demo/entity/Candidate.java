@@ -1,7 +1,6 @@
 package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,7 +28,6 @@ public class Candidate {
     @Column(name = "last_name")
     private String lastName;
     @OneToMany(mappedBy = "candidate")
-    @JsonIgnore
     private Set<Interview> interviews = new HashSet<>();
     @Column(name = "contact")
     private String contact;
