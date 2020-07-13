@@ -5,33 +5,39 @@ import com.example.candidatetracker.demo.entity.User;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public class CandidateDAOImpl implements CandidateDAO {
 
     @Autowired
-    public CandidateDAOImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public CandidateDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     private EntityManager entityManager;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
     @Override
     public Set<Candidate> getAll(User currentUser) {
         int userId = currentUser.getId();
         Session session = entityManager.unwrap(Session.class);
         User user = session.get(User.class, userId);
-        return user.getCandidates();
+
+        Set<User> successors = user.getSuccessors();
+
+        Query query = session.createQuery("select c from Candidate c where c.recruiter in :successor", Candidate.class).setParameter("successor", successors);
+        
+        List<Candidate> candidates = query.list();
+
+        return new HashSet<Candidate>(candidates);
     }
 
     @Override
