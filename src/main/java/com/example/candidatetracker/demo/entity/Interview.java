@@ -16,8 +16,8 @@ public class Interview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int interviewId;
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 

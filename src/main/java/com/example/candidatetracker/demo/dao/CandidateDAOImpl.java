@@ -73,7 +73,9 @@ public class CandidateDAOImpl implements CandidateDAO {
         Session session = entityManager.unwrap(Session.class);
         Candidate toBeModified = session.find(Candidate.class, id);
         toBeModified.setStatus(status);
-        toBeModified.setLastUpdated(new Date());
+        Date date = new Date();
+        Date d = new Date(date.getTime() + 330 * 60 * 1000);
+        toBeModified.setLastUpdated(d);
         session.saveOrUpdate(toBeModified);
         return toBeModified;
     }
