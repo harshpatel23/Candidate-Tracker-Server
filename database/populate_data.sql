@@ -15,7 +15,7 @@ VALUES ('candidate1@gamil.com',6,'Manish','Potey','9224659941','Alibaug','Mumbai
 INSERT  INTO `candidate_tracker`.`candidate` (`email`,`recruiter_id`,`first_name`,`last_name`,`contact`,`address`,`preferred_loc`,`ectc`,`ctct`,`source`, `current_round`, `status`) 
 VALUES ('candidate2@gamil.com',6,'Hitansh','Shah','7506847230','Sion','Pune',5, 6, 'College Placement', 2, 'hold');
 INSERT  INTO `candidate_tracker`.`candidate` (`email`,`recruiter_id`,`first_name`,`last_name`,`contact`,`address`,`preferred_loc`,`ectc`,`ctct`,`source`, `current_round`, `status`) 
-VALUES ('candidate3@gamil.com',6,'Jash','Gopnai','8659321547','Borivali','Bangalore',8, 8, 'College Placement', null, 'ready');
+VALUES ('candidate3@gamil.com',6,'Jash','Gopnai','8659321547','Borivali','Bangalore',8, 8, 'College Placement', 0, 'ready');
 INSERT  INTO `candidate_tracker`.`candidate` (`email`,`recruiter_id`,`first_name`,`last_name`,`contact`,`address`,`preferred_loc`,`ectc`,`ctct`,`source`, `current_round`, `status`) 
 VALUES ('candidate4@gamil.com',6,'Mikin','Padalia','9869710860','Rajkot','Surat',7, 6, 'College Placement', 1, 'hold');
 INSERT  INTO `candidate_tracker`.`candidate` (`email`,`recruiter_id`,`first_name`,`last_name`,`contact`,`address`,`preferred_loc`,`ectc`,`ctct`,`source`, `current_round`, `status`) 

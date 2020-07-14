@@ -38,4 +38,14 @@ public class InterviewServiceImpl implements InterviewService {
         return this.interviewDAO.save(interview, user);
     }
 
+    @Override
+    public Interview approveSchedule(Integer id, User user) {
+        return this.interviewDAO.approveSchedule(id, user);
+    }
+
+    @Override
+    public Interview rescheduleInterview(Interview interview, User user) {
+        return interviewDAO.rescheduleInterview(interview, user);
+    }
+
 }

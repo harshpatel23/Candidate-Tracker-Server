@@ -6,10 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +34,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         Set<User> successors = user.getSuccessors();
 
         Query query = session.createQuery("select c from Candidate c where c.recruiter in :successor", Candidate.class).setParameter("successor", successors);
-        
+
         List<Candidate> candidates = query.list();
 
         return new HashSet<Candidate>(candidates);
@@ -43,10 +43,13 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public Candidate save(Candidate candidate) {
         Session session = entityManager.unwrap(Session.class);
+        candidate.setCurrentRound(0);
+        candidate.setStatus("ready");
         session.save(candidate);
         return candidate;
     }
 
+    @Transactional
     @Override
     public Candidate update(Candidate candidate) {
         Session session = entityManager.unwrap(Session.class);

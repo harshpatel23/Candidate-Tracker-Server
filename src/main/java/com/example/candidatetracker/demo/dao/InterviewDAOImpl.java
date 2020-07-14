@@ -6,6 +6,7 @@ import com.example.candidatetracker.demo.entity.User;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.HashSet;
@@ -54,4 +55,33 @@ public class InterviewDAOImpl implements InterviewDAO {
         session.save(interview);
         return interview;
     }
+
+    @Transactional
+    @Override
+    public Interview approveSchedule(Integer id, User user) {
+        Session session = entityManager.unwrap(Session.class);
+        Interview interview = session.get(Interview.class, id);
+        interview.setApprovalStatus("both_approved");
+        interview.setUpdatedBy(user);
+        interview.getCandidate().setStatus("hold");
+        session.saveOrUpdate(interview);
+        return interview;
+    }
+
+    @Transactional
+    @Override
+    public Interview rescheduleInterview(Interview interview, User user) {
+        Session session = entityManager.unwrap(Session.class);
+        Interview curr = session.get(Interview.class, interview.getInterviewId());
+        curr.setUpdatedBy(user);
+        curr.setComplete(false);
+        if (user.getRole().getRole().equals("recruiter") && curr.getApprovalStatus().equals("interviewer_approved"))
+            curr.setApprovalStatus("recruiter_approved");
+        else if (user.getRole().getRole().equals("interviewer") && curr.getApprovalStatus().equals("recruiter_approved"))
+            curr.setApprovalStatus("interviewer_approved");
+        session.saveOrUpdate(curr);
+        return interview;
+    }
+
+
 }

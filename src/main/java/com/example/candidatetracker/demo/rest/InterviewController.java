@@ -51,4 +51,24 @@ public class InterviewController {
         return this.interviewService.save(interview, user);
     }
 
+    @PutMapping("/approve/{id}")
+    public Interview approveSchedule(@PathVariable Integer id, Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        User user = null;
+        if (principal instanceof JwtUserDetails) {
+            user = ((JwtUserDetails) principal).getUser();
+        }
+        return this.interviewService.approveSchedule(id, user);
+    }
+
+    @PutMapping("/reschedule")
+    public Interview rescheduleInterview(@RequestBody Interview interview, Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        User user = null;
+        if (principal instanceof JwtUserDetails) {
+            user = ((JwtUserDetails) principal).getUser();
+        }
+        return this.interviewService.rescheduleInterview(interview, user);
+    }
+
 }

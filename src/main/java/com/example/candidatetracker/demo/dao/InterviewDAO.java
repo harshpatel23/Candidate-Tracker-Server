@@ -14,4 +14,8 @@ public interface InterviewDAO {
     Set<Interview> getInterviewsForInterviewer(User user);
 
     Interview save(Interview interview, User user);
+
+    Interview approveSchedule(Integer id, User user);
+
+    Interview rescheduleInterview(Interview interview, User user);
 }
