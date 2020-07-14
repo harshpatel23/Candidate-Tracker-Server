@@ -18,4 +18,6 @@ public interface InterviewService {
     Interview approveSchedule(Integer id, User user);
 
     Interview rescheduleInterview(Interview interview, User user);
+
+    Interview updateFeedback(Interview id, User user);
 }

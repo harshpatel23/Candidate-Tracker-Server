@@ -48,4 +48,10 @@ public class InterviewServiceImpl implements InterviewService {
         return interviewDAO.rescheduleInterview(interview, user);
     }
 
+
+    @Override
+    public Interview updateFeedback(Interview interview, User user) {
+        return interviewDAO.updateFeedback(interview, user);
+    }
+
 }

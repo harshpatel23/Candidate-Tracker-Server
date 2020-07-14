@@ -71,4 +71,14 @@ public class InterviewController {
         return this.interviewService.rescheduleInterview(interview, user);
     }
 
+    @PutMapping("/feedback")
+    public Interview updateFeedback(@RequestBody Interview interview, Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        User user = null;
+        if (principal instanceof JwtUserDetails) {
+            user = ((JwtUserDetails) principal).getUser();
+        }
+        return this.interviewService.updateFeedback(interview, user);
+    }
+
 }

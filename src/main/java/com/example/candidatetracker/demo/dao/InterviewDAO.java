@@ -18,4 +18,6 @@ public interface InterviewDAO {
     Interview approveSchedule(Integer id, User user);
 
     Interview rescheduleInterview(Interview interview, User user);
+
+    Interview updateFeedback(Interview interview, User user);
 }

@@ -83,5 +83,22 @@ public class InterviewDAOImpl implements InterviewDAO {
         return interview;
     }
 
+    @Transactional
+    @Override
+    public Interview updateFeedback(Interview interview, User user) {
+        Session session = entityManager.unwrap(Session.class);
+        Interview curr = session.get(Interview.class, interview.getInterviewId());
+        curr.setUpdatedBy(user);
+        curr.setFeedback(interview.getFeedback());
+        curr.setComplete(true);
+        Candidate candidate = curr.getCandidate();
+        if (user.getRole().getRole().equals("interviewer")) {
+            candidate.setStatus("ready");
+            candidate.setCurrentRound(candidate.getCurrentRound() + 1);
+        }
+        session.saveOrUpdate(curr);
+        return curr;
+    }
+
 
 }
