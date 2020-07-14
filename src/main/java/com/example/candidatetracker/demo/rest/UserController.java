@@ -34,6 +34,18 @@ public class UserController{
         return this.userService.findAllSuccessors(user);
     }
 
+    @GetMapping("/interviewers")
+    public ResponseEntity<List<User>> getInterviewers(Authentication authentication){
+        Object principal = authentication.getPrincipal();
+
+        User user = null;
+        if(principal instanceof JwtUserDetails){
+            user = ((JwtUserDetails)principal).getUser();
+        }
+        return this.userService.getInterviewers(user);
+    }
+
+
     @GetMapping("{identifier}")             //find by id / email
     public ResponseEntity<User> getUserById(@PathVariable String identifier){
         try{

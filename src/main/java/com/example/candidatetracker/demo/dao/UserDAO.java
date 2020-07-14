@@ -23,4 +23,6 @@ public interface UserDAO {
 
 	public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user);
 
+	public ResponseEntity<List<User>> getInterviewers(User user);
+
 }
