@@ -1,6 +1,8 @@
 package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -41,8 +43,8 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    //@JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
-    @JsonIgnore
+    @JsonIgnoreProperties({"managers", "successors", "subordinates", "manager"})
+    // @JsonIgnore
     private User manager;
 
     @OneToMany(mappedBy = "recruiter")

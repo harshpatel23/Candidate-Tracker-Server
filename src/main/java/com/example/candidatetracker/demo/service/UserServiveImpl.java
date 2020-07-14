@@ -64,5 +64,10 @@ public class UserServiveImpl implements UserService {
         return this.userDAO.updatePassword(passwordData, user);
     }
 
+    @Override
+    public ResponseEntity<List<User>> getInterviewers(User user) {
+        return this.userDAO.getInterviewers(user);
+    }
+
     
 }

@@ -166,5 +166,17 @@ public class UserDaoImpl implements UserDAO {
         }
         return new ResponseEntity<>("Old Password incorrect", HttpStatus.BAD_REQUEST);
     }
+
+    @Override
+    public ResponseEntity<List<User>> getInterviewers(User user) {
+        Session session = entityManager.unwrap(Session.class);
+        Query<User> query = session.createQuery("select u from User u where u.role = 'interviewer'");
+
+        if(user.getRole().getRole().equals("recruiter")){
+            return new ResponseEntity<>(query.list(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
     
 }
