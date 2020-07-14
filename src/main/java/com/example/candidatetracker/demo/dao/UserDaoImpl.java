@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import com.example.candidatetracker.demo.entity.PasswordData;
 import com.example.candidatetracker.demo.entity.User;
+import com.example.candidatetracker.demo.service.EmailService;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -24,11 +25,13 @@ public class UserDaoImpl implements UserDAO {
 
     private EntityManager entityManager;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private EmailService emailService;
 
     @Autowired
-    public UserDaoImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public UserDaoImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService){
         this.entityManager = entityManager;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = emailService;
     }
 
 
@@ -92,6 +95,8 @@ public class UserDaoImpl implements UserDAO {
     @Override
 	public ResponseEntity<User> save(User user) {
 
+        System.out.println(user);
+
         Session session = entityManager.unwrap(Session.class);
 
         //check if user email already exists
@@ -101,7 +106,15 @@ public class UserDaoImpl implements UserDAO {
         }
 
         String password = User.generateRandomPassword();
+        
         //Send mail to user about this password
+        try{
+            emailService.sendEmail(user.getEmail(), password);
+        }catch(Exception e){
+            System.out.println("Some error occured");
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         String encryptedPassword = bCryptPasswordEncoder.encode(password); 
         user.setPassword(encryptedPassword);
         user.setIsActive(1);
