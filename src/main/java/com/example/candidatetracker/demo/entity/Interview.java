@@ -2,6 +2,7 @@ package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,6 +26,9 @@ public class Interview {
     @JoinColumn(name = "interviewer_id")
     private User interviewer;
 
+    @JoinColumn(name = "approval_status")
+    private String approvalStatus;
+
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     @Column(name = "start_time")
@@ -41,6 +45,10 @@ public class Interview {
     @Column(name = "round_no")
     private int roundNum;
 
+    @Column(columnDefinition = "TINYINT", name = "is_complete")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
+    private boolean complete;
+
     @ManyToOne
     @JoinColumn(name = "updated_by")
     private User updatedBy;
@@ -53,6 +61,22 @@ public class Interview {
         this.endTime = endTime;
         this.feedback = feedback;
         this.roundNum = roundNum;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
     }
 
     public Candidate getCandidate() {
@@ -107,12 +131,11 @@ public class Interview {
         return updatedBy;
     }
 
-    public int getInterviewId() {
-        return interviewId;
-    }
-
     public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
     }
 
+    public int getInterviewId() {
+        return interviewId;
+    }
 }
