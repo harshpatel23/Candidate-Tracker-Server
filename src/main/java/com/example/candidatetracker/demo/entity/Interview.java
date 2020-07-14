@@ -30,12 +30,12 @@ public class Interview {
     private String approvalStatus;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", locale="en_IN", timezone = "Asia/Kolkata")
     @Column(name = "start_time")
     private Date startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", locale="en_IN", timezone = "Asia/Kolkata")
     @Column(name = "end_time")
     private Date endTime;
 
