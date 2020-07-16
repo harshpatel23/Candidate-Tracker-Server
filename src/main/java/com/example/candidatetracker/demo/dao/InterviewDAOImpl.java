@@ -94,6 +94,7 @@ public class InterviewDAOImpl implements InterviewDAO {
     public Interview rescheduleInterview(Interview interview, User user) {
         Session session = entityManager.unwrap(Session.class);
         Interview curr = session.get(Interview.class, interview.getInterviewId());
+        
         curr.setUpdatedBy(user);
         curr.setStartTime(interview.getStartTime());
         curr.setEndTime(interview.getEndTime());
