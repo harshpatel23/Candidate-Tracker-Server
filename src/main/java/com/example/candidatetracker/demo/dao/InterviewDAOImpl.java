@@ -105,7 +105,7 @@ public class InterviewDAOImpl implements InterviewDAO {
         Interview curr = session.get(Interview.class, interview.getInterviewId());
         curr.setUpdatedBy(user);
         curr.setStartTime(interview.getStartTime());
-        curr.setStartTime(interview.getEndTime());
+        curr.setEndTime(interview.getEndTime());
         curr.setComplete(false);
         if (user.getRole().getRole().equals("recruiter") && curr.getApprovalStatus().equals("interviewer_approved"))
             curr.setApprovalStatus("recruiter_approved");
