@@ -1,6 +1,7 @@
 package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -48,6 +49,11 @@ public class Candidate {
 
     @Column(name = "source")
     private String source;
+
+    @Lob
+    @JsonIgnore
+    @Column(name = "cv")
+    private byte[] cv;
 
     @Column(name = "current_round")
     private Integer currentRound;
@@ -203,5 +209,12 @@ public class Candidate {
         return lastUpdated;
     }
 
+    public byte[] getCv() {
+        return cv;
+    }
+
+    public void setCv(byte[] cv) {
+        this.cv = cv;
+    }
 
 }

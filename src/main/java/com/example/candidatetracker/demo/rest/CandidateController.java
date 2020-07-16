@@ -4,10 +4,13 @@ import com.example.candidatetracker.demo.entity.Candidate;
 import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.CandidateService;
 import com.example.candidatetracker.demo.service.JwtUserDetails;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,10 +36,20 @@ public class CandidateController {
         return this.candidateService.getAll(user);
     }
 
+    @GetMapping("{id}/cv")
+    public ResponseEntity<Resource> getCV(@PathVariable String id){
+        return this.candidateService.getCV(Integer.parseInt(id));
+    }
+
     @PostMapping("")
-    public Candidate saveCandidate(@RequestBody Candidate candidate) {
-        candidateService.save(candidate);
-        return candidate;
+    public ResponseEntity<Candidate> saveCandidate(@RequestBody Candidate candidate) {
+        return candidateService.save(candidate);
+    }
+
+    @PostMapping("{id}/cv")
+    public ResponseEntity<Candidate> uploadResume(@PathVariable String id, @RequestParam("cvFile") MultipartFile cvFile){
+        int candidate_id = Integer.parseInt(id);
+        return this.candidateService.uploadCV(candidate_id, cvFile);
     }
 
     @PutMapping("")
