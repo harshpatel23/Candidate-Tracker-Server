@@ -5,10 +5,11 @@ import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.CandidateService;
 import com.example.candidatetracker.demo.service.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/candidates")
@@ -22,7 +23,7 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @GetMapping("")
-    public Set<Candidate> getAllCandidates(Authentication authentication) {
+    public ResponseEntity<List<Candidate>> getAllCandidates(Authentication authentication) {
         Object principal = authentication.getPrincipal();
 
         User user = null;
@@ -46,7 +47,7 @@ public class CandidateController {
 
     // maps to id if String can be parsed to integer else considers it as email
     @GetMapping("{identifier}")
-    public Candidate getUserById(@PathVariable String identifier) {
+    public ResponseEntity<Candidate> getUserById(@PathVariable String identifier) {
         try {
             int id = Integer.parseInt(identifier);
             return this.candidateService.getCandidateById(id);
@@ -56,12 +57,12 @@ public class CandidateController {
     }
 
     @PutMapping("/hire/{id}")
-    public Candidate hireCandidate(@PathVariable Integer id) {
+    public ResponseEntity<Candidate> hireCandidate(@PathVariable Integer id) {
         return candidateService.changeCandidateStatus(id, "hired");
     }
 
     @PutMapping("/reject/{id}")
-    public Candidate rejectCandidate(@PathVariable Integer id) {
+    public ResponseEntity<Candidate> rejectCandidate(@PathVariable Integer id) {
         return candidateService.changeCandidateStatus(id, "rejected");
     }
 

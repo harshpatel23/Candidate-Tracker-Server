@@ -4,14 +4,14 @@ import com.example.candidatetracker.demo.entity.Candidate;
 import com.example.candidatetracker.demo.entity.Interview;
 import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.CalendarService;
-
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,79 +20,88 @@ import java.util.Set;
 public class InterviewDAOImpl implements InterviewDAO {
 
     private EntityManager entityManager;
+
     private CalendarService calendarService;
 
     @Autowired
-    public InterviewDAOImpl(EntityManager entityManager, CalendarService calendarService){
+    public InterviewDAOImpl(EntityManager entityManager, CalendarService calendarService) {
         this.entityManager = entityManager;
         this.calendarService = calendarService;
     }
 
     @Override
-    public Interview getInterviewById(Integer id) {
+    public ResponseEntity<Interview> getInterviewById(Integer id) {
         Session session = entityManager.unwrap(Session.class);
         Interview interview = session.get(Interview.class, id);
-        return interview;
+        return interview != null ? new ResponseEntity<>(interview, HttpStatus.OK) : new ResponseEntity<>(interview, HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Set<Interview> getInterviewsForRecruiter(User user) {
+    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) {
         Session session = entityManager.unwrap(Session.class);
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         User currUser = session.get(User.class, user.getId());
         Set<Interview> interviewSet = new HashSet<>();
-        for (Candidate c : currUser.getCandidates())
-            interviewSet.addAll(c.getInterviews());
-        return interviewSet;
+        for (Candidate c : currUser.getCandidates()) interviewSet.addAll(c.getInterviews());
+        return new ResponseEntity<>(interviewSet, HttpStatus.OK);
     }
 
     @Override
-    public Set<Interview> getInterviewsForInterviewer(User user) {
+    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) {
         Session session = entityManager.unwrap(Session.class);
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         User currUser = session.get(User.class, user.getId());
-        return currUser.getInterviews();
+        return new ResponseEntity<>(currUser.getInterviews(), HttpStatus.OK);
     }
 
     @Override
-    public Interview save(Interview interview, User user) {
+    public ResponseEntity<Interview> save(Interview interview, User user) {
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        else if (user.getRole().getRole().equals("interviewer")) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         Session session = entityManager.unwrap(Session.class);
         interview.setUpdatedBy(user);
         interview.setApprovalStatus("recruiter_approved");
         interview.setComplete(false);
-
         //Creating Calender event;
         Date startDate = interview.getStartTime();
         Date endDate = interview.getEndTime();
-
         String interviewer_email = session.get(User.class, interview.getInterviewer().getId()).getEmail();
         String candidate_email = session.get(Candidate.class, interview.getCandidate().getId()).getEmail();
-        
-        try{
+        try {
             calendarService.createEvent(startDate, endDate, interviewer_email, candidate_email);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
-
         session.save(interview);
-        return interview;
+        return new ResponseEntity<>(interview, HttpStatus.OK);
     }
 
     @Transactional
     @Override
-    public Interview approveSchedule(Integer id, User user) {
+    public ResponseEntity<Interview> approveSchedule(Integer id, User user) {
         Session session = entityManager.unwrap(Session.class);
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         Interview interview = session.get(Interview.class, id);
         interview.setApprovalStatus("both_approved");
         interview.setUpdatedBy(user);
         interview.getCandidate().setStatus("hold");
         session.saveOrUpdate(interview);
-        return interview;
+        return new ResponseEntity<>(interview, HttpStatus.OK);
     }
 
     @Transactional
     @Override
-    public Interview rescheduleInterview(Interview interview, User user) {
+    public ResponseEntity<Interview> rescheduleInterview(Interview interview, User user) {
         Session session = entityManager.unwrap(Session.class);
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         Interview curr = session.get(Interview.class, interview.getInterviewId());
         
         curr.setUpdatedBy(user);
@@ -104,12 +113,14 @@ public class InterviewDAOImpl implements InterviewDAO {
         else if (user.getRole().getRole().equals("interviewer") && curr.getApprovalStatus().equals("recruiter_approved"))
             curr.setApprovalStatus("interviewer_approved");
         session.saveOrUpdate(curr);
-        return curr;
+        return new ResponseEntity<>(interview, HttpStatus.OK);
     }
 
     @Transactional
     @Override
-    public Interview updateFeedback(Interview interview, User user) {
+    public ResponseEntity<Interview> updateFeedback(Interview interview, User user) {
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         Session session = entityManager.unwrap(Session.class);
         Interview curr = session.get(Interview.class, interview.getInterviewId());
         curr.setUpdatedBy(user);
@@ -121,7 +132,7 @@ public class InterviewDAOImpl implements InterviewDAO {
             candidate.setCurrentRound(candidate.getCurrentRound() + 1);
         }
         session.saveOrUpdate(curr);
-        return curr;
+        return new ResponseEntity<>(curr, HttpStatus.OK);
     }
 
 

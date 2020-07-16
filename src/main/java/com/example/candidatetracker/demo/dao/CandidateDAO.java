@@ -2,20 +2,21 @@ package com.example.candidatetracker.demo.dao;
 
 import com.example.candidatetracker.demo.entity.Candidate;
 import com.example.candidatetracker.demo.entity.User;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Set;
+import java.util.List;
 
 public interface CandidateDAO {
 
-    public Set<Candidate> getAll(User currentUser);
+    public ResponseEntity<List<Candidate>> getAll(User currentUser);
 
     public Candidate save(Candidate candidate);
 
     public Candidate update(Candidate candidate);
 
-    public Candidate getCandidateById(int Id);
+    public ResponseEntity<Candidate> getCandidateById(int Id);
 
-    public Candidate getCandidateByEmail(String email);
+    public ResponseEntity<Candidate> getCandidateByEmail(String email);
 
-    public Candidate changeCandidateStatus(Integer id, String status);
+    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status);
 }
