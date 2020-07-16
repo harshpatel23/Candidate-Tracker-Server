@@ -5,6 +5,8 @@ import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.InterviewService;
 import com.example.candidatetracker.demo.service.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,17 +25,18 @@ public class InterviewController {
 
     // find Interview by email or id
     @GetMapping("{id}")
-    public Interview getUserById(@PathVariable Integer id) {
+    public ResponseEntity<Interview> getUserById(@PathVariable Integer id) {
         return this.interviewService.getInterviewById(id);
     }
 
     @GetMapping("")
-    public Set<Interview> getAllInterviews(Authentication authentication) {
+    public ResponseEntity<Set<Interview>> getAllInterviews(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         User user = null;
-        if (principal instanceof JwtUserDetails) {
+        if (principal instanceof JwtUserDetails)
             user = ((JwtUserDetails) principal).getUser();
-        }
+        if (user == null)
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         if (user.getRole().getRole().equals("recruiter")) {
             return this.interviewService.getInterviewsForRecruiter(user);
         } else {
@@ -42,7 +45,7 @@ public class InterviewController {
     }
 
     @PostMapping("")
-    public Interview saveInterview(@RequestBody Interview interview, Authentication authentication) {
+    public ResponseEntity<Interview> saveInterview(@RequestBody Interview interview, Authentication authentication) {
         Object principal = authentication.getPrincipal();
         User user = null;
         if (principal instanceof JwtUserDetails) {
@@ -52,7 +55,7 @@ public class InterviewController {
     }
 
     @PutMapping("/approve/{id}")
-    public Interview approveSchedule(@PathVariable Integer id, Authentication authentication) {
+    public ResponseEntity<Interview> approveSchedule(@PathVariable Integer id, Authentication authentication) {
         Object principal = authentication.getPrincipal();
         User user = null;
         if (principal instanceof JwtUserDetails) {
@@ -62,7 +65,7 @@ public class InterviewController {
     }
 
     @PutMapping("/reschedule")
-    public Interview rescheduleInterview(@RequestBody Interview interview, Authentication authentication) {
+    public ResponseEntity<Interview> rescheduleInterview(@RequestBody Interview interview, Authentication authentication) {
         Object principal = authentication.getPrincipal();
         User user = null;
         if (principal instanceof JwtUserDetails) {
@@ -72,7 +75,7 @@ public class InterviewController {
     }
 
     @PutMapping("/feedback")
-    public Interview updateFeedback(@RequestBody Interview interview, Authentication authentication) {
+    public ResponseEntity<Interview> updateFeedback(@RequestBody Interview interview, Authentication authentication) {
         Object principal = authentication.getPrincipal();
         User user = null;
         if (principal instanceof JwtUserDetails) {

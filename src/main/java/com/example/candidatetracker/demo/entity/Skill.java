@@ -2,6 +2,7 @@ package com.example.candidatetracker.demo.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -10,6 +11,10 @@ import java.util.Set;
 @Entity
 @Table(name = "skills")
 public class Skill {
+
+    public void setSkillId(int skillId) {
+        this.skillId = skillId;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +30,12 @@ public class Skill {
             joinColumns = {@JoinColumn(name = "skill_id")},
             inverseJoinColumns = {@JoinColumn(name = "interviewer_id")})
     private Set<User> interviewers = new HashSet<>();
-    
-    @JsonIgnore
+
+    public void setInterviewers(Set<User> interviewers) {
+        this.interviewers = interviewers;
+    }
+
+    @JsonIgnoreProperties({"skillSet"})
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "candidate_skills",
             joinColumns = {@JoinColumn(name = "skill_id")},

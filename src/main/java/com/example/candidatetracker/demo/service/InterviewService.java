@@ -2,22 +2,23 @@ package com.example.candidatetracker.demo.service;
 
 import com.example.candidatetracker.demo.entity.Interview;
 import com.example.candidatetracker.demo.entity.User;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Set;
 
 public interface InterviewService {
 
-    public Interview getInterviewById(Integer id);
+    public ResponseEntity<Interview> getInterviewById(Integer id);
 
-    Set<Interview> getInterviewsForRecruiter(User user);
+    ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user);
 
-    Set<Interview> getInterviewsForInterviewer(User user);
+    ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user);
 
-    Interview save(Interview interview, User user);
+    ResponseEntity<Interview> save(Interview interview, User user);
 
-    Interview approveSchedule(Integer id, User user);
+    ResponseEntity<Interview> approveSchedule(Integer id, User user);
 
-    Interview rescheduleInterview(Interview interview, User user);
+    ResponseEntity<Interview> rescheduleInterview(Interview interview, User user);
 
-    Interview updateFeedback(Interview id, User user);
+    ResponseEntity<Interview> updateFeedback(Interview id, User user);
 }
