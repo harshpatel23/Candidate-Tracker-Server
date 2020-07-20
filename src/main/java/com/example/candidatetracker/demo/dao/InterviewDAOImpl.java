@@ -67,17 +67,7 @@ public class InterviewDAOImpl implements InterviewDAO {
         interview.setUpdatedBy(user);
         interview.setApprovalStatus("recruiter_approved");
         interview.setComplete(false);
-        //Creating Calender event;
-        Date startDate = interview.getStartTime();
-        Date endDate = interview.getEndTime();
-        String interviewer_email = session.get(User.class, interview.getInterviewer().getId()).getEmail();
-        String candidate_email = session.get(Candidate.class, interview.getCandidate().getId()).getEmail();
-        try {
-            calendarService.createEvent(startDate, endDate, interviewer_email, candidate_email);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        
         session.save(interview);
         return new ResponseEntity<>(interview, HttpStatus.OK);
     }
@@ -89,6 +79,19 @@ public class InterviewDAOImpl implements InterviewDAO {
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         Interview interview = session.get(Interview.class, id);
+
+        //Creating Calender event;
+        Date startDate = interview.getStartTime();
+        Date endDate = interview.getEndTime();
+        String interviewer_email = session.get(User.class, interview.getInterviewer().getId()).getEmail();
+        String candidate_email = session.get(Candidate.class, interview.getCandidate().getId()).getEmail();
+        try {
+            calendarService.createEvent(startDate, endDate, interviewer_email, candidate_email);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+
         interview.setApprovalStatus("both_approved");
         interview.setUpdatedBy(user);
         interview.getCandidate().setStatus("hold");
@@ -103,6 +106,7 @@ public class InterviewDAOImpl implements InterviewDAO {
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         Interview curr = session.get(Interview.class, interview.getInterviewId());
+        
         curr.setUpdatedBy(user);
         curr.setStartTime(interview.getStartTime());
         curr.setEndTime(interview.getEndTime());
