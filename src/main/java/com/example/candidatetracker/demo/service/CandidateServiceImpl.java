@@ -26,13 +26,13 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     @Transactional
-    public Candidate save(Candidate candidate) {
+    public ResponseEntity<Candidate> save(Candidate candidate) {
         return candidateDAO.save(candidate);
     }
 
     @Override
     @Transactional
-    public Candidate update(Candidate candidate) {
+    public ResponseEntity<Candidate> update(Candidate candidate) {
         return candidateDAO.update(candidate);
     }
 

@@ -34,15 +34,14 @@ public class CandidateController {
     }
 
     @PostMapping("")
-    public Candidate saveCandidate(@RequestBody Candidate candidate) {
+    public ResponseEntity<Candidate> saveCandidate(@RequestBody Candidate candidate) {
         candidateService.save(candidate);
-        return candidate;
+        return this.candidateService.save(candidate);
     }
 
     @PutMapping("")
-    public Candidate updateCandidate(@RequestBody Candidate candidate) {
-        candidateService.update(candidate);
-        return candidate;
+    public ResponseEntity<Candidate> updateCandidate(@RequestBody Candidate candidate) {
+        return candidateService.update(candidate);
     }
 
     // maps to id if String can be parsed to integer else considers it as email

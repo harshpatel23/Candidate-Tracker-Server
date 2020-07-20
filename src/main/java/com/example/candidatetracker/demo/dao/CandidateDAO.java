@@ -10,9 +10,9 @@ public interface CandidateDAO {
 
     public ResponseEntity<List<Candidate>> getAll(User currentUser);
 
-    public Candidate save(Candidate candidate);
+    public ResponseEntity<Candidate> save(Candidate candidate);
 
-    public Candidate update(Candidate candidate);
+    public ResponseEntity<Candidate> update(Candidate candidate);
 
     public ResponseEntity<Candidate> getCandidateById(int Id);
 

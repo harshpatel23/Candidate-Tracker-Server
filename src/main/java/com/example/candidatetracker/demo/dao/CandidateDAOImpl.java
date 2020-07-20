@@ -1,6 +1,7 @@
 package com.example.candidatetracker.demo.dao;
 
 import com.example.candidatetracker.demo.entity.Candidate;
+import com.example.candidatetracker.demo.entity.Skill;
 import com.example.candidatetracker.demo.entity.User;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -44,26 +45,28 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Transactional
     @Override
-    public Candidate save(Candidate candidate) {
+    public ResponseEntity<Candidate> save(Candidate candidate) {
         Session session = entityManager.unwrap(Session.class);
         candidate.setCurrentRound(0);
         candidate.setStatus("ready");
         candidate.setLastUpdated(new Date());
-
+        for (Skill s : candidate.getSkillSet()) {
+            Skill sessionSkill = session.get(Skill.class, s.getSkillId());
+            if (sessionSkill == null)
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            sessionSkill.getCandidates().add(candidate);
+        }
         session.save(candidate);
-        return candidate;
+        return new ResponseEntity<>(candidate, HttpStatus.OK);
     }
 
     @Transactional
     @Override
-    public Candidate update(Candidate candidate) {
+    public ResponseEntity<Candidate> update(Candidate candidate) {
         Session session = entityManager.unwrap(Session.class);
-        candidate.setCurrentRound(0);
-        candidate.setStatus("ready");
         candidate.setLastUpdated(new Date());
-
         session.saveOrUpdate(candidate);
-        return candidate;
+        return new ResponseEntity<>(candidate, HttpStatus.OK);
     }
 
 
