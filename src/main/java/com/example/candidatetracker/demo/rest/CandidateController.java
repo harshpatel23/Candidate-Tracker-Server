@@ -4,7 +4,6 @@ import com.example.candidatetracker.demo.entity.Candidate;
 import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.CandidateService;
 import com.example.candidatetracker.demo.service.JwtUserDetails;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class CandidateController {
     }
 
     @GetMapping("{id}/cv")
-    public ResponseEntity<Resource> getCV(@PathVariable String id){
+    public ResponseEntity<Resource> getCV(@PathVariable String id) {
         return this.candidateService.getCV(Integer.parseInt(id));
     }
 
@@ -48,7 +47,7 @@ public class CandidateController {
     }
 
     @PostMapping("{id}/cv")
-    public ResponseEntity<Candidate> uploadResume(@PathVariable String id, @RequestParam("cvFile") MultipartFile cvFile){
+    public ResponseEntity<Candidate> uploadResume(@PathVariable String id, @RequestParam("cvFile") MultipartFile cvFile) {
         int candidate_id = Integer.parseInt(id);
         return this.candidateService.uploadCV(candidate_id, cvFile);
 

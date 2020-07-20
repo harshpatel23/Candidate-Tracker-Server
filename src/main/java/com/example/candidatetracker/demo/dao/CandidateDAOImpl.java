@@ -77,10 +77,24 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public ResponseEntity<Candidate> update(Candidate candidate) {
         Session session = entityManager.unwrap(Session.class);
+        Query query = session.createQuery("from Skill", Skill.class);
+        List<Skill> skills = query.getResultList();
+        Set<Skill> skillSet = candidate.getSkillSet();
+        for (Skill s : skills) {
+            if (skillSet.contains(s)) {
+                if (!s.getCandidates().contains(candidate)) {
+                    s.getCandidates().add(candidate);
+                }
+            } else {
+                if (s.getCandidates().contains(candidate)) {
+                    s.getCandidates().remove(candidate);
+                }
+            }
+        }
         candidate.setLastUpdated(new Date());
-        session.saveOrUpdate(candidate);
         return new ResponseEntity<>(candidate, HttpStatus.OK);
     }
+
 
     // Any signed in user can acees any candidate as of now
     @Override
@@ -143,22 +157,22 @@ public class CandidateDAOImpl implements CandidateDAO {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream out = null;
             byte[] cvBytes = null;
-            try{
+            try {
                 out = new ObjectOutputStream(bos);
                 out.writeObject(cv);
                 out.flush();
                 cvBytes = bos.toByteArray();
-            }finally{
-                try{
+            } finally {
+                try {
                     bos.close();
-                }catch(IOException io){
+                } catch (IOException io) {
                     System.out.println(io.getMessage());
                 }
             }
 
-            if(cvBytes != null){
+            if (cvBytes != null) {
                 candidate.setCv(cvBytes);
-            }else{
+            } else {
                 throw new Exception();
             }
 
@@ -175,7 +189,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     public ResponseEntity<Resource> getCV(int id) {
         Session session = entityManager.unwrap(Session.class);
 
-        if(session.get(Candidate.class, id).getCv() == null)
+        if (session.get(Candidate.class, id).getCv() == null)
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
         byte[] cvBytes = session.get(Candidate.class, id).getCv();
@@ -184,24 +198,24 @@ public class CandidateDAOImpl implements CandidateDAO {
         ObjectInput in = null;
         File cvFile = null;
 
-        try{
-            try{
+        try {
+            try {
                 in = new ObjectInputStream(bis);
-                cvFile = (File)in.readObject();
-            }finally{
-                try{
-                    if(in != null){
+                cvFile = (File) in.readObject();
+            } finally {
+                try {
+                    if (in != null) {
                         in.close();
                     }
-                }catch(IOException io){
+                } catch (IOException io) {
                     System.out.println(io.getMessage());
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
 
-        if(cvFile == null){
+        if (cvFile == null) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
