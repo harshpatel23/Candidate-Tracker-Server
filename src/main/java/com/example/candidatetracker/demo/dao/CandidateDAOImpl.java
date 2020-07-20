@@ -92,6 +92,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             }
         }
         candidate.setLastUpdated(new Date());
+        session.merge(candidate);
         return new ResponseEntity<>(candidate, HttpStatus.OK);
     }
 

@@ -42,7 +42,6 @@ public class CandidateController {
 
     @PostMapping("")
     public ResponseEntity<Candidate> saveCandidate(@RequestBody Candidate candidate) {
-        candidateService.save(candidate);
         return this.candidateService.save(candidate);
     }
 
