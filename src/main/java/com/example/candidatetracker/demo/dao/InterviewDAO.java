@@ -8,17 +8,17 @@ import java.util.Set;
 
 public interface InterviewDAO {
 
-    public ResponseEntity<Interview> getInterviewById(Integer id);
+    public ResponseEntity<Interview> getInterviewById(Integer id) throws Exception;
 
-    ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user);
+    ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) throws Exception;
 
-    ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user);
+    ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) throws Exception;
 
-    ResponseEntity<Interview> save(Interview interview, User user);
+    ResponseEntity<Interview> save(Interview interview, User user) throws Exception;
 
-    ResponseEntity<Interview> approveSchedule(Integer id, User user);
+    ResponseEntity<Interview> approveSchedule(Integer id, User user) throws Exception;
 
-    ResponseEntity<Interview> rescheduleInterview(Interview interview, User user);
+    ResponseEntity<Interview> rescheduleInterview(Interview interview, User user) throws Exception;
 
-    ResponseEntity<Interview> updateFeedback(Interview interview, User user);
+    ResponseEntity<Interview> updateFeedback(Interview interview, User user) throws Exception;
 }

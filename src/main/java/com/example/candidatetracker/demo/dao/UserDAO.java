@@ -9,20 +9,20 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserDAO {
 
-    public List<User> findAllSuccessors(User user);
+    public ResponseEntity<List<User>> findAllSuccessors(User user) throws Exception;
 
-    public ResponseEntity<User> findById(int id);
+    public ResponseEntity<User> findById(int id) throws Exception;
 
-    public ResponseEntity<User> save(User user);
+    public ResponseEntity<User> save(User user) throws Exception;
 
-    public ResponseEntity<User> findByEmail(String email);
+    public ResponseEntity<User> findByEmail(String email) throws Exception;
 
-    public ResponseEntity<List<User>> findByRole(String role, User user);
+    public ResponseEntity<List<User>> findByRole(String role, User user) throws Exception;
 
-	public ResponseEntity<User> update(User user);
+	public ResponseEntity<User> update(User user) throws Exception;
 
-	public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user);
+	public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) throws Exception;
 
-	public ResponseEntity<List<User>> getInterviewers(User user);
+	public ResponseEntity<List<User>> getInterviewers(User user) throws Exception;
 
 }

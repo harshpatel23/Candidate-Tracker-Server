@@ -26,62 +26,97 @@ public class InterviewController {
     // find Interview by email or id
     @GetMapping("{id}")
     public ResponseEntity<Interview> getUserById(@PathVariable Integer id) {
-        return this.interviewService.getInterviewById(id);
+        
+        try{
+            return this.interviewService.getInterviewById(id);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("")
     public ResponseEntity<Set<Interview>> getAllInterviews(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        User user = null;
-        if (principal instanceof JwtUserDetails)
-            user = ((JwtUserDetails) principal).getUser();
-        if (user == null)
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        if (user.getRole().getRole().equals("recruiter")) {
-            return this.interviewService.getInterviewsForRecruiter(user);
-        } else {
-            return this.interviewService.getInterviewsForInterviewer(user);
+        
+        try{
+            Object principal = authentication.getPrincipal();
+            User user = null;
+            if (principal instanceof JwtUserDetails)
+                user = ((JwtUserDetails) principal).getUser();                
+            if (user.getRole().getRole().equals("recruiter")) {
+                return this.interviewService.getInterviewsForRecruiter(user);
+            } else if (user.getRole().getRole().equals("interviewer")){
+                return this.interviewService.getInterviewsForInterviewer(user);
+            } else{
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     @PostMapping("")
     public ResponseEntity<Interview> saveInterview(@RequestBody Interview interview, Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        User user = null;
-        if (principal instanceof JwtUserDetails) {
-            user = ((JwtUserDetails) principal).getUser();
+        
+        try{
+            Object principal = authentication.getPrincipal();
+            User user = null;
+            if (principal instanceof JwtUserDetails) {
+                user = ((JwtUserDetails) principal).getUser();
+            }
+            return this.interviewService.save(interview, user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.interviewService.save(interview, user);
+
     }
 
     @PutMapping("/approve/{id}")
     public ResponseEntity<Interview> approveSchedule(@PathVariable Integer id, Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        User user = null;
-        if (principal instanceof JwtUserDetails) {
-            user = ((JwtUserDetails) principal).getUser();
+        
+        try{
+            Object principal = authentication.getPrincipal();
+            User user = null;
+            if (principal instanceof JwtUserDetails) {
+                user = ((JwtUserDetails) principal).getUser();
+            }
+            return this.interviewService.approveSchedule(id, user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.interviewService.approveSchedule(id, user);
+
     }
 
     @PutMapping("/reschedule")
     public ResponseEntity<Interview> rescheduleInterview(@RequestBody Interview interview, Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        User user = null;
-        if (principal instanceof JwtUserDetails) {
-            user = ((JwtUserDetails) principal).getUser();
+        
+        try{
+            Object principal = authentication.getPrincipal();
+            User user = null;
+            if (principal instanceof JwtUserDetails) {
+                user = ((JwtUserDetails) principal).getUser();
+            }
+            return this.interviewService.rescheduleInterview(interview, user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.interviewService.rescheduleInterview(interview, user);
+    
     }
 
     @PutMapping("/feedback")
     public ResponseEntity<Interview> updateFeedback(@RequestBody Interview interview, Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        User user = null;
-        if (principal instanceof JwtUserDetails) {
-            user = ((JwtUserDetails) principal).getUser();
+        
+        try{
+            Object principal = authentication.getPrincipal();
+            User user = null;
+            if (principal instanceof JwtUserDetails) {
+                user = ((JwtUserDetails) principal).getUser();
+            }
+            return this.interviewService.updateFeedback(interview, user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.interviewService.updateFeedback(interview, user);
+
     }
 
 }

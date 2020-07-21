@@ -69,13 +69,11 @@ public class CalendarService {
 
     public void createEvent(Date startDate, Date endDate, String interviewer_email, String candidate_email) throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
-        System.out.println("in createEvent");
 
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-        System.out.println("service created");
         //Create event
         Event event = new Event()
             .setSummary("Interview Scheduled")
@@ -118,7 +116,6 @@ public class CalendarService {
         event = service.events().insert(calendarId, event).set("sendUpdates", "all").execute();
 
 
-        System.out.println("service call made");
         System.out.printf("Event created: %s\n", event.getHtmlLink());
     }
 }
