@@ -77,22 +77,20 @@ public class CandidateDAOImpl implements CandidateDAO {
     @Override
     public ResponseEntity<Candidate> update(Candidate candidate) {
         Session session = entityManager.unwrap(Session.class);
+        Candidate myCandidate = session.get(Candidate.class, candidate.getId());
         Query query = session.createQuery("from Skill", Skill.class);
         List<Skill> skills = query.getResultList();
         Set<Skill> skillSet = candidate.getSkillSet();
         for (Skill s : skills) {
-            if (skillSet.contains(s)) {
-                if (!s.getCandidates().contains(candidate)) {
-                    s.getCandidates().add(candidate);
-                }
-            } else {
-                if (s.getCandidates().contains(candidate)) {
-                    s.getCandidates().remove(candidate);
-                }
-            }
+            if (skillSet.contains(s))
+                s.getCandidates().add(myCandidate);
+            else if (!skillSet.contains(s))
+                s.getCandidates().remove(myCandidate);
         }
-        candidate.setLastUpdated(new Date());
-        return new ResponseEntity<>(candidate, HttpStatus.OK);
+        myCandidate.setLastUpdated(new Date());
+        //myCandidate.setSkillSet(skillSet);
+        session.saveOrUpdate(myCandidate);
+        return new ResponseEntity<>(myCandidate, HttpStatus.OK);
     }
 
 

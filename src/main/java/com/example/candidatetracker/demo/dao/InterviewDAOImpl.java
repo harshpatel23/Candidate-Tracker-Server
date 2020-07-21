@@ -67,7 +67,7 @@ public class InterviewDAOImpl implements InterviewDAO {
         interview.setUpdatedBy(user);
         interview.setApprovalStatus("recruiter_approved");
         interview.setComplete(false);
-        
+
         session.save(interview);
         return new ResponseEntity<>(interview, HttpStatus.OK);
     }
@@ -91,7 +91,6 @@ public class InterviewDAOImpl implements InterviewDAO {
             System.out.println(e.getMessage());
             return null;
         }
-
         interview.setApprovalStatus("both_approved");
         interview.setUpdatedBy(user);
         interview.getCandidate().setStatus("hold");
@@ -106,7 +105,7 @@ public class InterviewDAOImpl implements InterviewDAO {
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         Interview curr = session.get(Interview.class, interview.getInterviewId());
-        
+
         curr.setUpdatedBy(user);
         curr.setStartTime(interview.getStartTime());
         curr.setEndTime(interview.getEndTime());

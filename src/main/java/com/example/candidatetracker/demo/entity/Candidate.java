@@ -201,12 +201,12 @@ public class Candidate {
         this.status = status;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
     public Date getLastUpdated() {
         return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public byte[] getCv() {
