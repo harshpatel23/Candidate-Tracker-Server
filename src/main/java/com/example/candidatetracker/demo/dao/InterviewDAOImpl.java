@@ -68,6 +68,9 @@ public class InterviewDAOImpl implements InterviewDAO {
         interview.setApprovalStatus("recruiter_approved");
         interview.setComplete(false);
 
+        Candidate candidate = session.get(Candidate.class, interview.getCandidate().getId());
+        interview.setRoundNum(candidate.getCurrentRound() + 1);
+
         session.save(interview);
         return new ResponseEntity<>(interview, HttpStatus.OK);
     }
