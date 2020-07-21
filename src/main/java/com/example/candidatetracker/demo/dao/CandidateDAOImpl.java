@@ -87,10 +87,16 @@ public class CandidateDAOImpl implements CandidateDAO {
             else if (!skillSet.contains(s))
                 s.getCandidates().remove(myCandidate);
         }
+
         myCandidate.setLastUpdated(new Date());
-        //myCandidate.setSkillSet(skillSet);
+        myCandidate.setSkillSet(skillSet);
         session.saveOrUpdate(myCandidate);
         return new ResponseEntity<>(myCandidate, HttpStatus.OK);
+        /*
+        candidate.setLastUpdated(new Date());
+        session.merge(candidate);
+        return new ResponseEntity<>(candidate, HttpStatus.OK);*/
+
     }
 
 
