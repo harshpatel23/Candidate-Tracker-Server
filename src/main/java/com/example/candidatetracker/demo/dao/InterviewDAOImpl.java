@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class InterviewDAOImpl implements InterviewDAO {
@@ -30,34 +31,36 @@ public class InterviewDAOImpl implements InterviewDAO {
     }
 
     @Override
-    public ResponseEntity<Interview> getInterviewById(Integer id) {
+    public ResponseEntity<Interview> getInterviewById(Integer id) throws Exception{
         Session session = entityManager.unwrap(Session.class);
         Interview interview = session.get(Interview.class, id);
         return interview != null ? new ResponseEntity<>(interview, HttpStatus.OK) : new ResponseEntity<>(interview, HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) {
+    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         User currUser = session.get(User.class, user.getId());
         Set<Interview> interviewSet = new HashSet<>();
-        for (Candidate c : currUser.getCandidates()) interviewSet.addAll(c.getInterviews());
+        for (Candidate c : currUser.getCandidates()) interviewSet.addAll(c.getInterviews().stream().filter(interview -> !(interview.isComplete())).collect(Collectors.toList()));
         return new ResponseEntity<>(interviewSet, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) {
+    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         User currUser = session.get(User.class, user.getId());
-        return new ResponseEntity<>(currUser.getInterviews(), HttpStatus.OK);
+
+        Set<Interview> interviews = currUser.getInterviews().stream().filter(interview -> !(interview.isComplete())).collect(Collectors.toSet());
+        return new ResponseEntity<>(interviews, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Interview> save(Interview interview, User user) {
+    public ResponseEntity<Interview> save(Interview interview, User user) throws Exception {
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         else if (user.getRole().getRole().equals("interviewer")) {
@@ -77,7 +80,7 @@ public class InterviewDAOImpl implements InterviewDAO {
 
     @Transactional
     @Override
-    public ResponseEntity<Interview> approveSchedule(Integer id, User user) {
+    public ResponseEntity<Interview> approveSchedule(Integer id, User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -103,7 +106,7 @@ public class InterviewDAOImpl implements InterviewDAO {
 
     @Transactional
     @Override
-    public ResponseEntity<Interview> rescheduleInterview(Interview interview, User user) {
+    public ResponseEntity<Interview> rescheduleInterview(Interview interview, User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);

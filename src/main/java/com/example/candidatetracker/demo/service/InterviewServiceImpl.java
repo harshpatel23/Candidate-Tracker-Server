@@ -20,38 +20,38 @@ public class InterviewServiceImpl implements InterviewService {
     private InterviewDAO interviewDAO;
 
     @Override
-    public ResponseEntity<Interview> getInterviewById(Integer id) {
+    public ResponseEntity<Interview> getInterviewById(Integer id) throws Exception {
         return interviewDAO.getInterviewById(id);
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) {
+    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) throws Exception {
         return this.interviewDAO.getInterviewsForRecruiter(user);
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) {
+    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) throws Exception {
         return this.interviewDAO.getInterviewsForInterviewer(user);
     }
 
     @Override
-    public ResponseEntity<Interview> save(Interview interview, User user) {
+    public ResponseEntity<Interview> save(Interview interview, User user) throws Exception {
         return this.interviewDAO.save(interview, user);
     }
 
     @Override
-    public ResponseEntity<Interview> approveSchedule(Integer id, User user) {
+    public ResponseEntity<Interview> approveSchedule(Integer id, User user) throws Exception {
         return this.interviewDAO.approveSchedule(id, user);
     }
 
     @Override
-    public ResponseEntity<Interview> rescheduleInterview(Interview interview, User user) {
+    public ResponseEntity<Interview> rescheduleInterview(Interview interview, User user) throws Exception {
         return interviewDAO.rescheduleInterview(interview, user);
     }
 
 
     @Override
-    public ResponseEntity<Interview> updateFeedback(Interview interview, User user) {
+    public ResponseEntity<Interview> updateFeedback(Interview interview, User user) throws Exception {
         return interviewDAO.updateFeedback(interview, user);
     }
 

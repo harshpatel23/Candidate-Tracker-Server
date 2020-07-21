@@ -21,7 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserDaoImpl implements UserDAO {
+public class UserDaoImpl implements UserDAO{
 
     private EntityManager entityManager;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDAO {
 
 
     @Override
-    public List<User> findAllSuccessors(User current_user) {
+    public ResponseEntity<List<User>> findAllSuccessors(User current_user) throws Exception {
 
         int userId = current_user.getId();
         Session session = entityManager.unwrap(Session.class);
@@ -44,11 +44,11 @@ public class UserDaoImpl implements UserDAO {
         Query<User> query = session.createQuery("select u from User u where u.id = :userId", User.class).setParameter("userId",userId);
 
         User user = query.getSingleResult();
-        return new ArrayList<User>(user.getSuccessors());    
+        return new ResponseEntity<>(new ArrayList<User>(user.getSuccessors()), HttpStatus.OK);    
     }
 
     @Override
-	public ResponseEntity<User> findById(int id) {
+	public ResponseEntity<User> findById(int id) throws Exception {
 
         Session session = entityManager.unwrap(Session.class);
 
@@ -58,7 +58,7 @@ public class UserDaoImpl implements UserDAO {
 	}
 
     @Override
-	public ResponseEntity<User> findByEmail(String email) {
+	public ResponseEntity<User> findByEmail(String email) throws Exception {
         
         Session session = entityManager.unwrap(Session.class);
         
@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDAO {
 	}
 
     @Override
-    public ResponseEntity<List<User>> findByRole(String role, User current_user) {
+    public ResponseEntity<List<User>> findByRole(String role, User current_user) throws Exception {
 
         int userId = current_user.getId();
             
@@ -93,7 +93,7 @@ public class UserDaoImpl implements UserDAO {
     }
     
     @Override
-	public ResponseEntity<User> save(User user) {
+	public ResponseEntity<User> save(User user) throws Exception {
 
         System.out.println(user);
 
@@ -112,7 +112,7 @@ public class UserDaoImpl implements UserDAO {
             emailService.sendEmail(user.getEmail(), password);
         }catch(Exception e){
             System.out.println("Some error occured");
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.FAILED_DEPENDENCY);
         }
 
         String encryptedPassword = bCryptPasswordEncoder.encode(password); 
@@ -125,7 +125,7 @@ public class UserDaoImpl implements UserDAO {
 
     @Override
     @Transactional
-    public ResponseEntity<User> update(User user) {
+    public ResponseEntity<User> update(User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
 
         User existing_user = session.find(User.class, user.getId());
@@ -150,7 +150,7 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-    public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) {
+    public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) throws Exception {
 
         Session session = entityManager.unwrap(Session.class);
 
@@ -168,7 +168,7 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-    public ResponseEntity<List<User>> getInterviewers(User user) {
+    public ResponseEntity<List<User>> getInterviewers(User user)  throws Exception{
         Session session = entityManager.unwrap(Session.class);
         Query<User> query = session.createQuery("select u from User u where u.role = 'interviewer'");
 

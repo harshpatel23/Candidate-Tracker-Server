@@ -24,48 +24,48 @@ public class UserServiveImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> findAllSuccessors(User user) {
+    public ResponseEntity<List<User>> findAllSuccessors(User user) throws Exception {
         return userDAO.findAllSuccessors(user);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<User> findById(int id) {
+    public ResponseEntity<User> findById(int id) throws Exception {
         return userDAO.findById(id);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<User> save(User user) {
+    public ResponseEntity<User> save(User user) throws Exception {
         return userDAO.save(user);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<User> findByEmail(String email) {
+    public ResponseEntity<User> findByEmail(String email) throws Exception {
         return userDAO.findByEmail(email);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<List<User>> findByRole(String role, User user) {
+    public ResponseEntity<List<User>> findByRole(String role, User user) throws Exception {
         return this.userDAO.findByRole(role, user);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<User> update(User user) {
+    public ResponseEntity<User> update(User user) throws Exception {
         return this.userDAO.update(user);        
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) {
+    public ResponseEntity<Object> updatePassword(PasswordData passwordData, User user) throws Exception {
         return this.userDAO.updatePassword(passwordData, user);
     }
 
     @Override
-    public ResponseEntity<List<User>> getInterviewers(User user) {
+    public ResponseEntity<List<User>> getInterviewers(User user) throws Exception {
         return this.userDAO.getInterviewers(user);
     }
 

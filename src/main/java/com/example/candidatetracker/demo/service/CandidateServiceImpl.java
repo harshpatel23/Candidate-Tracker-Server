@@ -23,48 +23,48 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     @Transactional
-    public ResponseEntity<List<Candidate>> getAll(User currentUser) {
+    public ResponseEntity<List<Candidate>> getAll(User currentUser) throws Exception {
         return candidateDAO.getAll(currentUser);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Candidate> save(Candidate candidate) {
+    public ResponseEntity<Candidate> save(Candidate candidate) throws Exception {
         return candidateDAO.save(candidate);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Candidate> update(Candidate candidate) {
+    public ResponseEntity<Candidate> update(Candidate candidate) throws Exception {
         return candidateDAO.update(candidate);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Candidate> getCandidateById(int id) {
+    public ResponseEntity<Candidate> getCandidateById(int id) throws Exception {
         return candidateDAO.getCandidateById(id);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Candidate> getCandidateByEmail(String email) {
+    public ResponseEntity<Candidate> getCandidateByEmail(String email) throws Exception {
         return candidateDAO.getCandidateByEmail(email);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status) {
+    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status) throws Exception {
         return candidateDAO.changeCandidateStatus(id, status);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Candidate> uploadCV(int candidate_id, MultipartFile cvFile) {
+    public ResponseEntity<Candidate> uploadCV(int candidate_id, MultipartFile cvFile) throws Exception {
         return this.candidateDAO.uploadCV(candidate_id, cvFile);
     }
 
     @Override
-    public ResponseEntity<Resource> getCV(int id) {
+    public ResponseEntity<Resource> getCV(int id) throws Exception {
         return this.candidateDAO.getCV(id);
     }
 

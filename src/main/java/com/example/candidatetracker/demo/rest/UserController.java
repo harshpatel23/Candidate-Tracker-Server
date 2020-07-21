@@ -6,6 +6,7 @@ import com.example.candidatetracker.demo.service.JwtUserDetails;
 import com.example.candidatetracker.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,70 +25,107 @@ public class UserController{
     }
 
     @GetMapping("")
-    public List<User> findAllSuccessors(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
+    public ResponseEntity<List<User>> findAllSuccessors(Authentication authentication) {
+        
+        try{
+            Object principal = authentication.getPrincipal();
 
-        User user = null;
-        if(principal instanceof JwtUserDetails){
-            user = ((JwtUserDetails)principal).getUser();
+            User user = null;
+            if(principal instanceof JwtUserDetails){
+                user = ((JwtUserDetails)principal).getUser();
+            }
+            return this.userService.findAllSuccessors(user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.userService.findAllSuccessors(user);
     }
 
     @GetMapping("/interviewers")
     public ResponseEntity<List<User>> getInterviewers(Authentication authentication){
-        Object principal = authentication.getPrincipal();
+        
+        try{
+            Object principal = authentication.getPrincipal();
 
-        User user = null;
-        if(principal instanceof JwtUserDetails){
-            user = ((JwtUserDetails)principal).getUser();
+            User user = null;
+            if(principal instanceof JwtUserDetails){
+                user = ((JwtUserDetails)principal).getUser();
+            }
+            return this.userService.getInterviewers(user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.userService.getInterviewers(user);
     }
 
 
     @GetMapping("{identifier}")             //find by id / email
     public ResponseEntity<User> getUserById(@PathVariable String identifier){
+        
         try{
-            int id = Integer.parseInt(identifier);
-            return this.userService.findById(id);
-        }catch(NumberFormatException e){
-            return this.userService.findByEmail(identifier);
+            try{
+                int id = Integer.parseInt(identifier);
+                return this.userService.findById(id);
+            }catch(NumberFormatException e){
+                return this.userService.findByEmail(identifier);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/role/{role}")
     public ResponseEntity<List<User>> findSuccessorsByRole(@PathVariable String role, Authentication authentication){
         
-        Object principal = authentication.getPrincipal();
+        try{
+            Object principal = authentication.getPrincipal();
 
-        User user = null;
-        if(principal instanceof JwtUserDetails){
-            user = ((JwtUserDetails)principal).getUser();
+            User user = null;
+            if(principal instanceof JwtUserDetails){
+                user = ((JwtUserDetails)principal).getUser();
+            }
+    
+            return this.userService.findByRole(role,user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return this.userService.findByRole(role,user);
     }
 
     @PostMapping("")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
-        return this.userService.save(user);
+        
+        try{
+            return this.userService.save(user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
     }
 
     @PutMapping("")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return this.userService.update(user);
+        
+        try{
+            return this.userService.update(user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PutMapping("/password")
     public ResponseEntity<Object> updatePassword(@RequestBody PasswordData passwordData, Authentication authentication){
-        Object principal = authentication.getPrincipal();
+        
+        try{
+            Object principal = authentication.getPrincipal();
 
-        User user = null;
-        if(principal instanceof JwtUserDetails){
-            user = ((JwtUserDetails)principal).getUser();
+            User user = null;
+            if(principal instanceof JwtUserDetails){
+                user = ((JwtUserDetails)principal).getUser();
+            }
+    
+            return this.userService.updatePassword(passwordData, user);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return this.userService.updatePassword(passwordData, user);
     }
 }

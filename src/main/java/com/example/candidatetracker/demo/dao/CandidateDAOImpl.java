@@ -35,10 +35,13 @@ public class CandidateDAOImpl implements CandidateDAO {
     private EntityManager entityManager;
 
     @Override
-    public ResponseEntity<List<Candidate>> getAll(User currentUser) {
+    public ResponseEntity<List<Candidate>> getAll(User currentUser) throws Exception{
         int userId = currentUser.getId();
         Session session = entityManager.unwrap(Session.class);
         User user = session.get(User.class, userId);
+
+        if(user.getRole().getRole().equals("interviewer"))
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 
         Set<User> successors = user.getSuccessors();
 
@@ -53,7 +56,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Transactional
     @Override
-    public ResponseEntity<Candidate> save(Candidate candidate) {
+    public ResponseEntity<Candidate> save(Candidate candidate) throws Exception{
         Session session = entityManager.unwrap(Session.class);
 
         if (getCandidateByEmail(candidate.getEmail()).getStatusCodeValue() == 200) {
@@ -75,9 +78,13 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     @Transactional
     @Override
-    public ResponseEntity<Candidate> update(Candidate candidate) {
+    public ResponseEntity<Candidate> update(Candidate candidate) throws Exception{
         Session session = entityManager.unwrap(Session.class);
         Candidate myCandidate = session.get(Candidate.class, candidate.getId());
+        if(myCandidate == null){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
         Query query = session.createQuery("from Skill", Skill.class);
         List<Skill> skills = query.getResultList();
         Set<Skill> skillSet = candidate.getSkillSet();
@@ -88,7 +95,6 @@ public class CandidateDAOImpl implements CandidateDAO {
                 s.getCandidates().remove(myCandidate);
         }
 
-        myCandidate.setLastUpdated(new Date());
         myCandidate.setSkillSet(skillSet);
         session.saveOrUpdate(myCandidate);
         return new ResponseEntity<>(myCandidate, HttpStatus.OK);
@@ -102,7 +108,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     // Any signed in user can acees any candidate as of now
     @Override
-    public ResponseEntity<Candidate> getCandidateById(int id) {
+    public ResponseEntity<Candidate> getCandidateById(int id) throws Exception{
         Session session = entityManager.unwrap(Session.class);
         Candidate candidate = session.get(Candidate.class, id);
         if (candidate != null)
@@ -113,7 +119,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
     // Any signed in user can acees any candidate as of now
     @Override
-    public ResponseEntity<Candidate> getCandidateByEmail(String email) {
+    public ResponseEntity<Candidate> getCandidateByEmail(String email) throws Exception{
         Session session = entityManager.unwrap(Session.class);
         Query<Candidate> query = session
                 .createQuery("select c from Candidate c where c.email = :email", Candidate.class)
@@ -131,9 +137,8 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status) {
-        if (id == null || status == null)
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status) throws Exception{
+
         Session session = entityManager.unwrap(Session.class);
         Candidate toBeModified = session.find(Candidate.class, id);
         if (toBeModified == null)
@@ -147,13 +152,13 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-    public ResponseEntity<Candidate> uploadCV(int candidate_id, MultipartFile cvFile) {
+    public ResponseEntity<Candidate> uploadCV(int candidate_id, MultipartFile cvFile) throws Exception{
         Session session = entityManager.unwrap(Session.class);
 
         Candidate candidate = session.get(Candidate.class, candidate_id);
 
         if (candidate == null)
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 
         try {
             File cv = new File(cvFile.getOriginalFilename(), cvFile.getContentType(), cvFile.getBytes());
@@ -181,7 +186,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             }
 
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
 
         session.saveOrUpdate(candidate);
@@ -190,7 +195,7 @@ public class CandidateDAOImpl implements CandidateDAO {
     }
 
     @Override
-    public ResponseEntity<Resource> getCV(int id) {
+    public ResponseEntity<Resource> getCV(int id) throws Exception{
         Session session = entityManager.unwrap(Session.class);
 
         if (session.get(Candidate.class, id).getCv() == null)
@@ -220,7 +225,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
 
         if (cvFile == null) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
         }
 
         return ResponseEntity.ok()

@@ -11,19 +11,19 @@ import java.util.List;
 
 public interface CandidateService {
 
-    public ResponseEntity<List<Candidate>> getAll(User currentUser);
+    public ResponseEntity<List<Candidate>> getAll(User currentUser) throws Exception;
 
-    public ResponseEntity<Candidate> save(Candidate candidate);
+    public ResponseEntity<Candidate> save(Candidate candidate) throws Exception;
 
-    public ResponseEntity<Candidate> update(Candidate candidate);
+    public ResponseEntity<Candidate> update(Candidate candidate) throws Exception;
 
-    public ResponseEntity<Candidate> getCandidateById(int id);
+    public ResponseEntity<Candidate> getCandidateById(int id) throws Exception;
 
-    public ResponseEntity<Candidate> getCandidateByEmail(String email);
+    public ResponseEntity<Candidate> getCandidateByEmail(String email) throws Exception;
 
-    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status);
+    public ResponseEntity<Candidate> changeCandidateStatus(Integer id, String status) throws Exception;
 
-	public ResponseEntity<Candidate> uploadCV(int candidate_id, MultipartFile cvFile);
+	public ResponseEntity<Candidate> uploadCV(int candidate_id, MultipartFile cvFile) throws Exception;
 
-	public ResponseEntity<Resource> getCV(int id);
+	public ResponseEntity<Resource> getCV(int id) throws Exception;
 }
