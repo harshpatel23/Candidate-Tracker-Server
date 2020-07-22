@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -26,16 +27,16 @@ public class InterviewController {
     // find Interview by email or id
     @GetMapping("{id}")
     public ResponseEntity<Interview> getUserById(@PathVariable Integer id) {
-        
-        try{
+
+        try {
             return this.interviewService.getInterviewById(id);
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("")
-    public ResponseEntity<Set<Interview>> getAllInterviews(Authentication authentication) {
+    public ResponseEntity<List<Interview>> getAllInterviews(Authentication authentication) {
         
         try{
             Object principal = authentication.getPrincipal();

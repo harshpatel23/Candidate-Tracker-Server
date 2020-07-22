@@ -44,7 +44,10 @@ public class UserDaoImpl implements UserDAO{
         Query<User> query = session.createQuery("select u from User u where u.id = :userId", User.class).setParameter("userId",userId);
 
         User user = query.getSingleResult();
-        return new ResponseEntity<>(new ArrayList<User>(user.getSuccessors()), HttpStatus.OK);    
+
+        List<User> successors = user.getSuccessors().stream().sorted((u1, u2) -> Integer.valueOf(u1.getId()).compareTo(Integer.valueOf(u2.getId()))).collect(Collectors.toList());
+
+        return new ResponseEntity<>(successors, HttpStatus.OK);    
     }
 
     @Override

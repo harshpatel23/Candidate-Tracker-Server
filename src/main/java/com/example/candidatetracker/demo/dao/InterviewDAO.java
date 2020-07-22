@@ -4,15 +4,16 @@ import com.example.candidatetracker.demo.entity.Interview;
 import com.example.candidatetracker.demo.entity.User;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Set;
 
 public interface InterviewDAO {
 
     public ResponseEntity<Interview> getInterviewById(Integer id) throws Exception;
 
-    ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) throws Exception;
+    ResponseEntity<List<Interview>> getInterviewsForRecruiter(User user) throws Exception;
 
-    ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) throws Exception;
+    ResponseEntity<List<Interview>> getInterviewsForInterviewer(User user) throws Exception;
 
     ResponseEntity<Interview> save(Interview interview, User user) throws Exception;
 

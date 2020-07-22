@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -25,12 +26,12 @@ public class InterviewServiceImpl implements InterviewService {
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) throws Exception {
+    public ResponseEntity<List<Interview>> getInterviewsForRecruiter(User user) throws Exception {
         return this.interviewDAO.getInterviewsForRecruiter(user);
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) throws Exception {
+    public ResponseEntity<List<Interview>> getInterviewsForInterviewer(User user) throws Exception {
         return this.interviewDAO.getInterviewsForInterviewer(user);
     }
 

@@ -45,7 +45,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         Set<User> successors = user.getSuccessors();
 
-        Query query = session.createQuery("select c from Candidate c where c.recruiter in :successor", Candidate.class)
+        Query query = session.createQuery("select c from Candidate c where c.recruiter in :successor order by c.id desc", Candidate.class)
                 .setParameter("successor", successors);
 
         List<Candidate> candidates = query.list();

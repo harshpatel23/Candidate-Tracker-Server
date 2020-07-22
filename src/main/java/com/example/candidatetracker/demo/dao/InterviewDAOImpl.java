@@ -2,6 +2,8 @@ package com.example.candidatetracker.demo.dao;
 
 import com.example.candidatetracker.demo.entity.Candidate;
 import com.example.candidatetracker.demo.entity.Interview;
+import com.example.candidatetracker.demo.entity.InterviewComparatorInterviewer;
+import com.example.candidatetracker.demo.entity.IntervieweCompratorRecruiter;
 import com.example.candidatetracker.demo.entity.User;
 import com.example.candidatetracker.demo.service.CalendarService;
 import org.hibernate.Session;
@@ -12,8 +14,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,25 +44,37 @@ public class InterviewDAOImpl implements InterviewDAO {
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForRecruiter(User user) throws Exception {
+    public ResponseEntity<List<Interview>> getInterviewsForRecruiter(User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         User currUser = session.get(User.class, user.getId());
-        Set<Interview> interviewSet = new HashSet<>();
-        for (Candidate c : currUser.getCandidates()) interviewSet.addAll(c.getInterviews().stream().filter(interview -> !(interview.isComplete())).collect(Collectors.toList()));
-        return new ResponseEntity<>(interviewSet, HttpStatus.OK);
+        List<Interview> interviewList = new ArrayList<>();
+        
+        // for (Candidate c : currUser.getCandidates()) interviewSet.addAll(c.getInterviews());
+        Date today = new Date();
+        for (Candidate c : currUser.getCandidates()) 
+            interviewList.addAll(c.getInterviews().stream().filter(interview -> ((int)((today.getTime() - interview.getEndTime().getTime()) / (24*60*60*1000))) < 30).collect(Collectors.toList()));
+        
+        //sorting for recruiter
+        Collections.sort(interviewList, new IntervieweCompratorRecruiter());
+        return new ResponseEntity<>(interviewList, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Set<Interview>> getInterviewsForInterviewer(User user) throws Exception {
+    public ResponseEntity<List<Interview>> getInterviewsForInterviewer(User user) throws Exception {
         Session session = entityManager.unwrap(Session.class);
         if (user == null)
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         User currUser = session.get(User.class, user.getId());
 
-        Set<Interview> interviews = currUser.getInterviews().stream().filter(interview -> !(interview.isComplete())).collect(Collectors.toSet());
-        return new ResponseEntity<>(interviews, HttpStatus.OK);
+        // return new ResponseEntity<>(currUser.getInterviews(), HttpStatus.OK);
+        Date today = new Date();
+        List<Interview> interviewList = currUser.getInterviews().stream().filter(interview -> ((int)((today.getTime() - interview.getEndTime().getTime()) / (24*60*60*1000))) < 30).collect(Collectors.toList());
+        
+        //sorting for interviewer
+        Collections.sort(interviewList, new InterviewComparatorInterviewer());
+        return new ResponseEntity<>(interviewList, HttpStatus.OK);
     }
 
     @Override

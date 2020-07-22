@@ -78,7 +78,7 @@ public class User {
     private List<Interview> interviewFeedbackUpdates = new ArrayList<>();
 
     @ManyToMany(mappedBy = "interviewers")
-    @JsonIgnore
+    @JsonIgnoreProperties({"interviewers"})
     private Set<Skill> skills = new HashSet<>();
 
     public User() {
