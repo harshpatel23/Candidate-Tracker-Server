@@ -4,6 +4,8 @@ import com.example.candidatetracker.demo.entity.Candidate;
 import com.example.candidatetracker.demo.entity.File;
 import com.example.candidatetracker.demo.entity.Skill;
 import com.example.candidatetracker.demo.entity.User;
+import com.example.candidatetracker.demo.service.EmailService;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ import java.util.Set;
 
 @Repository
 public class CandidateDAOImpl implements CandidateDAO {
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     public CandidateDAOImpl(EntityManager entityManager) {
@@ -147,7 +152,12 @@ public class CandidateDAOImpl implements CandidateDAO {
         Date date = new Date();
         Date d = new Date(date.getTime());
         toBeModified.setLastUpdated(d);
+
+        //send mail to recruiter
+        this.emailService.sendHireRejectMail(toBeModified.getRecruiter().getEmail(), status, toBeModified);
+
         session.saveOrUpdate(toBeModified);
+
         return new ResponseEntity<>(toBeModified, HttpStatus.OK);
     }
 

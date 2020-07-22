@@ -112,7 +112,7 @@ public class UserDaoImpl implements UserDAO{
         
         //Send mail to user about this password
         try{
-            emailService.sendEmail(user.getEmail(), password);
+            emailService.sendPassword(user.getEmail(), password);
         }catch(Exception e){
             System.out.println("Some error occured");
             return new ResponseEntity<>(null, HttpStatus.FAILED_DEPENDENCY);
