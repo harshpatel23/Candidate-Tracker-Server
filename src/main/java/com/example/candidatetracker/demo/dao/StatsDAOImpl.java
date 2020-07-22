@@ -23,8 +23,9 @@ public class StatsDAOImpl implements StatsDAO {
 
     @Override
     public ResponseEntity<Stats> getGlobalStats(Duration duration) {
-        if (duration.getStart().getTime() > duration.getEnd().getTime())
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        if (duration.getStart() != null && duration.getEnd() != null)
+            if (duration.getStart().getTime() > duration.getEnd().getTime())
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         if (duration.getDays() == null && duration.getStart() == null)
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         Stats stats = new Stats();
