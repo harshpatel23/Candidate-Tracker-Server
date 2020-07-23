@@ -43,8 +43,7 @@ public class StatsDAOImpl implements StatsDAO {
                 stats.setRejected(getGlobalByStartEnd(duration, "rejected"));
                 stats.setTotal(getGlobalTotalByStartEnd(duration));
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Stats>(stats, HttpStatus.OK);
@@ -72,9 +71,7 @@ public class StatsDAOImpl implements StatsDAO {
                 stats.setRejected(getLocalByStartEnd(duration, "rejected", user));
                 stats.setTotal(getLocalTotalByStartEnd(duration, user));
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Stats>(stats, HttpStatus.OK);
@@ -92,9 +89,16 @@ public class StatsDAOImpl implements StatsDAO {
 
     private long getGlobalByDays(Duration duration, String status) {
         Session session = entityManager.unwrap(Session.class);
-        Query query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated > current_date - :days) ")
-                .setParameter("status", status)
-                .setParameter("days", duration.getDays());
+        Query query;
+        if (duration.getDays() == 2) {
+            query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated = current_date - :days) ")
+                    .setParameter("status", status)
+                    .setParameter("days", duration.getDays() - 1);
+        } else {
+            query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated >= current_date - :days) ")
+                    .setParameter("status", status)
+                    .setParameter("days", duration.getDays() - 1);
+        }
         Long count = (Long) query.getSingleResult();
         return count;
     }
@@ -118,10 +122,16 @@ public class StatsDAOImpl implements StatsDAO {
         int userId = currentUser.getId();
         User user = session.get(User.class, userId);
         Set<User> successors = user.getSuccessors();
-        Query query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.status = :status) and (c.lastUpdated > current_date - :days)")
-                .setParameter("successor", successors)
-                .setParameter("status", status)
-                .setParameter("days", duration.getDays());
+        Query query;
+        if (duration.getDays() == 2) {
+            query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated = current_date - :days) ")
+                    .setParameter("status", status)
+                    .setParameter("days", duration.getDays() - 1);
+        } else {
+            query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated >= current_date - :days) ")
+                    .setParameter("status", status)
+                    .setParameter("days", duration.getDays() - 1);
+        }
         Long count = (Long) query.getSingleResult();
         return count;
     }
@@ -131,9 +141,19 @@ public class StatsDAOImpl implements StatsDAO {
         int userId = currentUser.getId();
         User user = session.get(User.class, userId);
         Set<User> successors = user.getSuccessors();
-        Query query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.lastUpdated > current_date - :days)")
-                .setParameter("successor", successors)
-                .setParameter("days", duration.getDays());
+        Query query;
+        if (duration.getDays() == 2)
+        {
+            query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.lastUpdated = current_date - :days)")
+                    .setParameter("successor", successors)
+                    .setParameter("days", duration.getDays() - 1);
+        }
+        else
+        {
+            query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.lastUpdated >= current_date - :days)")
+                    .setParameter("successor", successors)
+                    .setParameter("days", duration.getDays() - 1);
+        }
         Long count = (Long) query.getSingleResult();
         return count;
     }
@@ -153,8 +173,17 @@ public class StatsDAOImpl implements StatsDAO {
 
     private long getGlobalTotalByDays(Duration duration) {
         Session session = entityManager.unwrap(Session.class);
-        Query query = session.createQuery("select COUNT(c) from Candidate c where (c.lastUpdated > current_date - :days) ")
-                .setParameter("days", duration.getDays());
+        Query query;
+        if (duration.getDays() == 2)
+        {
+            query = session.createQuery("select COUNT(c) from Candidate c where (c.lastUpdated = current_date - :days) ")
+                    .setParameter("days", duration.getDays() - 1);
+        }
+        else
+        {
+            query = session.createQuery("select COUNT(c) from Candidate c where (c.lastUpdated >= current_date - :days) ")
+                    .setParameter("days", duration.getDays() - 1);
+        }
         Long count = (Long) query.getSingleResult();
         return count;
     }
