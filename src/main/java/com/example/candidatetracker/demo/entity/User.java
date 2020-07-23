@@ -2,7 +2,6 @@ package com.example.candidatetracker.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -78,7 +77,7 @@ public class User {
     private List<Interview> interviewFeedbackUpdates = new ArrayList<>();
 
     @ManyToMany(mappedBy = "interviewers", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"interviewers"})
+    //@JsonIgnoreProperties({"interviewers"})
     // @JsonIgnore
     private Set<Skill> skills = new HashSet<>();
 

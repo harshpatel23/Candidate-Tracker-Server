@@ -2,7 +2,6 @@ package com.example.candidatetracker.demo.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -49,7 +48,8 @@ public class Skill {
         this.interviewers = interviewers;
     }
 
-    @JsonIgnoreProperties({"skillSet"})
+    @JsonIgnore
+    //@JsonIgnoreProperties({"skillSet"})
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "candidate_skills",
             joinColumns = {@JoinColumn(name = "skill_id")},
