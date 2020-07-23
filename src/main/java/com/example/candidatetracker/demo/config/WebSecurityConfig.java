@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PUT, "/interviews/feedback", "/interviews/feedback/").hasAnyAuthority("interviewer")
         .antMatchers(HttpMethod.PUT, "/interviews/**").hasAnyAuthority("recruiter", "interviewer")
         //users
+        .antMatchers(HttpMethod.PUT, "/users", "/users/").permitAll()
         .antMatchers("/users", "/users/").hasAnyAuthority("root", "admin", "ops")
         .antMatchers(HttpMethod.GET, "/users/interviewers", "/users/interviewers/").hasAnyAuthority("recruiter")
         .antMatchers(HttpMethod.GET, "/users/role/**").hasAnyAuthority("root", "admin", "ops")
