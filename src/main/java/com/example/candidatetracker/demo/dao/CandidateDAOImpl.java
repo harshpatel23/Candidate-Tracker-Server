@@ -101,8 +101,8 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
 
         myCandidate.setSkillSet(skillSet);
-        session.saveOrUpdate(myCandidate);
-        return new ResponseEntity<>(myCandidate, HttpStatus.OK);
+        Candidate savedCandidate = (Candidate)session.merge(candidate);
+        return new ResponseEntity<>(savedCandidate, HttpStatus.OK);
         /*
         candidate.setLastUpdated(new Date());
         session.merge(candidate);

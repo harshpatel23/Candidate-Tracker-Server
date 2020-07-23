@@ -1,12 +1,15 @@
 package com.example.candidatetracker.demo.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.example.candidatetracker.demo.entity.Role;
 import com.example.candidatetracker.demo.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class JwtUserDetails implements UserDetails {
@@ -24,8 +27,9 @@ public class JwtUserDetails implements UserDetails {
 
 	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        return null;
+        List<GrantedAuthority> authList = new ArrayList<>();
+        authList.add(new SimpleGrantedAuthority(this.user.getRole().getRole()));
+        return authList;
     }
 
     @Override

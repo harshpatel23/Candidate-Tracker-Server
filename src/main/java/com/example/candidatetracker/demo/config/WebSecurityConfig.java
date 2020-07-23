@@ -3,6 +3,7 @@ package com.example.candidatetracker.demo.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -44,6 +45,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().
         //Allow all to /authenticate
         authorizeRequests().antMatchers("/authenticate").permitAll()
+
+        //securing endpoints
+        
+        //candidates
+        .antMatchers(HttpMethod.GET, "/candidates*", "/candidates/**").hasAnyAuthority("recruiter", "admin", "interviewer")
+        .antMatchers(HttpMethod.PUT, "/candidates*", "/candidates/**").hasAnyAuthority("recruiter","admin")
+        .antMatchers(HttpMethod.POST, "/candidates*", "/candidates/**").hasAnyAuthority("recruiter","admin")
+        //skills and roles
+        .antMatchers("/skills*","/skills/**").permitAll()
+        .antMatchers("/roles*", "/roles/**").permitAll()
+        //stats
+        .antMatchers("/stats/global").hasAnyAuthority("root", "admin", "ops", "recruiter")
+        .antMatchers("/stats/local").hasAnyAuthority("root", "admin", "ops", "recruiter")
+        //interviews
+        .antMatchers(HttpMethod.GET, "/interviews", "/interviews/").hasAnyAuthority("recruiter", "interviewer")
+        .antMatchers(HttpMethod.POST, "/interviews", "/interviews/").hasAnyAuthority("recruiter")
+        .antMatchers(HttpMethod.PUT, "/interviews/feedback", "/interviews/feedback/").hasAnyAuthority("interviewer")
+        .antMatchers(HttpMethod.PUT, "/interviews/**").hasAnyAuthority("recruiter", "interviewer")
+        //users
+        .antMatchers("/users", "/users/").hasAnyAuthority("root", "admin", "ops")
+        .antMatchers(HttpMethod.GET, "/users/interviewers", "/users/interviewers/").hasAnyAuthority("recruiter")
+        .antMatchers(HttpMethod.GET, "/users/role/**").hasAnyAuthority("root", "admin", "ops")
+        .antMatchers("/users/**").permitAll()        
+        
+        //Deny all other                                                                                              
+
+        .antMatchers("**").denyAll()
+
         //authenticate rest all requests
         .anyRequest().authenticated().and()
         // make sure we use stateless session; session won't be used to store user's state.
