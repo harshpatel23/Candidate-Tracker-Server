@@ -77,8 +77,9 @@ public class User {
     @JsonIgnore
     private List<Interview> interviewFeedbackUpdates = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "interviewers")
+    @ManyToMany(mappedBy = "interviewers", fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"interviewers"})
+    // @JsonIgnore
     private Set<Skill> skills = new HashSet<>();
 
     public User() {
