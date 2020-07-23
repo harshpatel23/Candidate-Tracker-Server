@@ -29,18 +29,23 @@ public class StatsDAOImpl implements StatsDAO {
         if (duration.getDays() == null && duration.getStart() == null)
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         Stats stats = new Stats();
-        if (duration.getDays() != null) {
-            stats.setHired(getGlobalByDays(duration, "hired"));
-            stats.setHold(getGlobalByDays(duration, "hold"));
-            stats.setReady(getGlobalByDays(duration, "ready"));
-            stats.setRejected(getGlobalByDays(duration, "rejected"));
-            stats.setTotal(getGlobalTotalByDays(duration));
-        } else {
-            stats.setHired(getGlobalByStartEnd(duration, "hired"));
-            stats.setHold(getGlobalByStartEnd(duration, "hold"));
-            stats.setReady(getGlobalByStartEnd(duration, "ready"));
-            stats.setRejected(getGlobalByStartEnd(duration, "rejected"));
-            stats.setTotal(getGlobalTotalByStartEnd(duration));
+        try {
+            if (duration.getDays() != null) {
+                stats.setHired(getGlobalByDays(duration, "hired"));
+                stats.setHold(getGlobalByDays(duration, "hold"));
+                stats.setReady(getGlobalByDays(duration, "ready"));
+                stats.setRejected(getGlobalByDays(duration, "rejected"));
+                stats.setTotal(getGlobalTotalByDays(duration));
+            } else {
+                stats.setHired(getGlobalByStartEnd(duration, "hired"));
+                stats.setHold(getGlobalByStartEnd(duration, "hold"));
+                stats.setReady(getGlobalByStartEnd(duration, "ready"));
+                stats.setRejected(getGlobalByStartEnd(duration, "rejected"));
+                stats.setTotal(getGlobalTotalByStartEnd(duration));
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Stats>(stats, HttpStatus.OK);
     }
@@ -53,18 +58,24 @@ public class StatsDAOImpl implements StatsDAO {
         if (duration.getDays() == null && duration.getStart() == null)
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         Stats stats = new Stats();
-        if (duration.getDays() != null) {
-            stats.setHired(getLocalByDays(duration, "hired", user));
-            stats.setHold(getLocalByDays(duration, "hold", user));
-            stats.setReady(getLocalByDays(duration, "ready", user));
-            stats.setRejected(getLocalByDays(duration, "rejected", user));
-            stats.setTotal(getLocalTotalByDays(duration, user));
-        } else {
-            stats.setHired(getLocalByStartEnd(duration, "hired", user));
-            stats.setHold(getLocalByStartEnd(duration, "hold", user));
-            stats.setReady(getLocalByStartEnd(duration, "ready", user));
-            stats.setRejected(getLocalByStartEnd(duration, "rejected", user));
-            stats.setTotal(getLocalTotalByStartEnd(duration, user));
+        try {
+            if (duration.getDays() != null) {
+                stats.setHired(getLocalByDays(duration, "hired", user));
+                stats.setHold(getLocalByDays(duration, "hold", user));
+                stats.setReady(getLocalByDays(duration, "ready", user));
+                stats.setRejected(getLocalByDays(duration, "rejected", user));
+                stats.setTotal(getLocalTotalByDays(duration, user));
+            } else {
+                stats.setHired(getLocalByStartEnd(duration, "hired", user));
+                stats.setHold(getLocalByStartEnd(duration, "hold", user));
+                stats.setReady(getLocalByStartEnd(duration, "ready", user));
+                stats.setRejected(getLocalByStartEnd(duration, "rejected", user));
+                stats.setTotal(getLocalTotalByStartEnd(duration, user));
+            }
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Stats>(stats, HttpStatus.OK);
     }
@@ -81,7 +92,7 @@ public class StatsDAOImpl implements StatsDAO {
 
     private long getGlobalByDays(Duration duration, String status) {
         Session session = entityManager.unwrap(Session.class);
-        Query query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated >= current_date - :days) ")
+        Query query = session.createQuery("select COUNT(c) from Candidate c where ( c.status = :status) AND (c.lastUpdated > current_date - :days) ")
                 .setParameter("status", status)
                 .setParameter("days", duration.getDays());
         Long count = (Long) query.getSingleResult();
@@ -107,7 +118,7 @@ public class StatsDAOImpl implements StatsDAO {
         int userId = currentUser.getId();
         User user = session.get(User.class, userId);
         Set<User> successors = user.getSuccessors();
-        Query query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.status = :status) and (c.lastUpdated >= current_date - :days)")
+        Query query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.status = :status) and (c.lastUpdated > current_date - :days)")
                 .setParameter("successor", successors)
                 .setParameter("status", status)
                 .setParameter("days", duration.getDays());
@@ -120,7 +131,7 @@ public class StatsDAOImpl implements StatsDAO {
         int userId = currentUser.getId();
         User user = session.get(User.class, userId);
         Set<User> successors = user.getSuccessors();
-        Query query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.lastUpdated >= current_date - :days)")
+        Query query = session.createQuery("select COUNT(c) from Candidate c where c.recruiter in :successor and (c.lastUpdated > current_date - :days)")
                 .setParameter("successor", successors)
                 .setParameter("days", duration.getDays());
         Long count = (Long) query.getSingleResult();
@@ -142,7 +153,7 @@ public class StatsDAOImpl implements StatsDAO {
 
     private long getGlobalTotalByDays(Duration duration) {
         Session session = entityManager.unwrap(Session.class);
-        Query query = session.createQuery("select COUNT(c) from Candidate c where (c.lastUpdated >= current_date - :days) ")
+        Query query = session.createQuery("select COUNT(c) from Candidate c where (c.lastUpdated > current_date - :days) ")
                 .setParameter("days", duration.getDays());
         Long count = (Long) query.getSingleResult();
         return count;
