@@ -202,4 +202,20 @@ public class UserDaoImpl implements UserDAO {
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
+    @Override
+    public ResponseEntity<Set<User>> getAllManagers(int id) throws Exception {
+        
+        User user = null;
+        Session session = entityManager.unwrap(Session.class);
+
+        user = session.get(User.class, id);
+        if(user == null){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        Set<User> managers = user.getManagers();
+
+        return new ResponseEntity<>(managers, HttpStatus.OK);
+    }
+
 }

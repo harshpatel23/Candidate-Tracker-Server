@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -67,6 +68,15 @@ public class UserController{
             }catch(NumberFormatException e){
                 return this.userService.findByEmail(identifier);
             }
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/managers/{id}")
+    public ResponseEntity<Set<User>> getAllManagers(@PathVariable int id){
+        try{
+            return this.userService.getAllManagers(id);
         }catch(Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

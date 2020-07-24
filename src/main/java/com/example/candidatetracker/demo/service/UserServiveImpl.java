@@ -1,6 +1,7 @@
 package com.example.candidatetracker.demo.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.example.candidatetracker.demo.dao.UserDAO;
 import com.example.candidatetracker.demo.entity.PasswordData;
@@ -17,10 +18,9 @@ public class UserServiveImpl implements UserService {
     private UserDAO userDAO;
 
     @Autowired
-    public UserServiveImpl(UserDAO userDAO){
+    public UserServiveImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
-
 
     @Override
     @Transactional
@@ -55,7 +55,7 @@ public class UserServiveImpl implements UserService {
     @Override
     @Transactional
     public ResponseEntity<User> update(User user) throws Exception {
-        return this.userDAO.update(user);        
+        return this.userDAO.update(user);
     }
 
     @Override
@@ -67,6 +67,11 @@ public class UserServiveImpl implements UserService {
     @Override
     public ResponseEntity<List<User>> getInterviewers(User user) throws Exception {
         return this.userDAO.getInterviewers(user);
+    }
+
+    @Override
+    public ResponseEntity<Set<User>> getAllManagers(int id) throws Exception{
+        return this.userDAO.getAllManagers(id);
     }
 
     
