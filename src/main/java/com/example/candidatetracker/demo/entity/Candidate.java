@@ -62,7 +62,7 @@ public class Candidate {
     private String status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", locale="en_IN", timezone = "Asia/Kolkata")
     @Column(name = "last_updated")
     private Date lastUpdated;
 
